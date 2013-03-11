@@ -77,7 +77,7 @@ function draw() {
   // Update game objects
   var update = function (modifier) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // item.y += 0.3;
+    item.y += 0.3;
 
     if(kbDown in keysDown) {
       if(item.y+itemHeight <= canvas.height) {
