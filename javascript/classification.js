@@ -3,8 +3,10 @@ function draw() {
   // Creating canvas
   var canvas = document.getElementById("game");
   var ctx = canvas.getContext("2d");
-  canvas.width = 512;
-  canvas.height = 480;
+  // canvas.width = 360;
+  // canvas.height = 640;
+  canvas.width = window.innerWidth/2;
+  canvas.height = window.innerHeight/2;
 
   // Constants
   var kbLeft = 37;
@@ -20,11 +22,20 @@ function draw() {
   var containerHeight = 75;
 
   // Objects
+  var pointer = {
+    x: 0,
+    y: 0,
+    width: 1,
+    height: 1
+  };
+
   var item = {
     speed: itemSpeed,
     type: 0,
     x: 0,
-    y: 0
+    y: 0,
+    width: itemWidth,
+    height: itemHeight
   };
 
   var containerRed = {
@@ -48,6 +59,18 @@ function draw() {
   var itemsRed = 0;
   var itemsBlue = 0;
   var itemsGreen = 0;
+  var items = 0;
+
+  // Check collision
+  var collided = false;
+
+  var checkCollision = function (one, two) {
+    if(two.x >= one.x && two.x <= (one.x + one.width)) {
+      if(two.y >= one.y && two.y <= (one.y + one.height)) {
+        collided = true;
+      }
+    }
+  };
 
   // Keyboard controls
   var keysDown = {};
@@ -60,7 +83,46 @@ function draw() {
     delete keysDown[e.keyCode];
   }, false);
 
-  // Reset the game when item is in container
+  // Mouse controls
+  var mouseDown = false;
+  var mousePos;
+  
+  var getMousePos = function (e) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+  };
+
+  addEventListener("mousedown", function (e) {
+    mouseDown = true;
+    mousePos = getMousePos(e);
+    pointer.x = mousePos.x;
+    pointer.y = mousePos.y;
+    checkCollision(item, pointer);
+    console.log("MOUSE DOWN");
+    console.log("Mouse position: " + mousePos.x + ", " + mousePos.y);
+  }, false);
+
+  addEventListener("mouseup", function (e) {
+    mouseDown = false;
+    collided = false;
+    console.log("MOUSE UP");
+  }, false);
+  
+  addEventListener("mousemove", function (e) {
+    if(mouseDown) {
+      mousePos = getMousePos(e);
+      console.log("Mouse position: " + mousePos.x + ", " + mousePos.y);
+      if(collided) {
+        item.x = mousePos.x;
+        item.y = mousePos.y;
+      }
+    }
+  }, false);
+
+  // Reset the game when item is in container line
   var reset = function () {
     item.x = canvas.width / 2;
     item.y = 20;
@@ -76,7 +138,6 @@ function draw() {
 
   // Update game objects
   var update = function (modifier) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
     item.y += 0.3;
 
     if(kbDown in keysDown) {
@@ -127,10 +188,24 @@ function draw() {
           ++itemsGreen;
       }
       reset();
+      collided = false;
     }
   };
  
   var render = function () {
+    // ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if(item.type == 0) {
+      ctx.fillStyle = "red";
+    } else if(item.type == 1) {
+      ctx.fillStyle = "blue";
+    } else if(item.type == 2) {
+      ctx.fillStyle = "green";
+    }
+    ctx.fillRect(item.x, item.y, itemWidth, itemHeight);
+
     ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
     ctx.fillRect(containerRed.x, containerRed.y, containerWidth, containerHeight);
     ctx.fillStyle = "rgba(0, 0, 255, 0.5)";
@@ -147,15 +222,6 @@ function draw() {
     ctx.fillText("Blue: " + itemsBlue, 5, 20);
     ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
     ctx.fillText("Green: " + itemsGreen, 5, 35);
-
-    if(item.type == 0) {
-      ctx.fillStyle = "red";
-    } else if(item.type == 1) {
-      ctx.fillStyle = "blue";
-    } else if(item.type == 2) {
-      ctx.fillStyle = "green";
-    }
-    ctx.fillRect(item.x, item.y, itemWidth, itemHeight);
 
     ctx.font = "12px Helvetica";
     ctx.fillText("Pos item: (" + parseInt(item.x) + ", " + parseInt(item.y) +" )", 100, 5);
