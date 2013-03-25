@@ -122,6 +122,45 @@ function draw() {
     }
   }, false);
 
+  // Touch controls
+  var touched = false;
+  var touchPos;
+
+  var getTouchPos = function (e) {
+    return {
+      x: e.targetTouches[0].pageX,
+      y: e.targetTouches[0].pageY
+    };
+  };
+
+  addEventListener("touchstart", function (e) {
+    touched = true;
+    touchPos = getTouchPos(e);
+    pointer.x = touchPos.x;
+    pointer.y = touchPos.y;
+    checkCollision(item, pointer);
+    console.log("TOUCHED");
+    console.log("Touched in " + touchPos.x + ", " + touchPos.y);
+  }, false);
+
+  addEventListener("touchend", function (e) {
+    touched = false;
+    collided = false;
+    console.log("TOUCH UP");
+  }, false);
+
+  addEventListener("touchmove", function (e) {
+    if(touched) {
+      touchPos = getTouchPos(e);
+      console.log("Touched in " + touchPos.x + ", " + touchPos.y);
+      if(collided) {
+        item.x = touchPos.x;
+        item.y = touchPos.y;
+      }
+    }
+  }, false);
+
+
   // Reset the game when item is in container line
   var reset = function () {
     item.x = canvas.width / 2;
