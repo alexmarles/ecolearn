@@ -242,6 +242,11 @@ function draw() {
     ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    ctx.shadowColor = 'black';
+    ctx.shadowBlur = 5;
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 2;
+
     items.forEach( function(item) {
       if(item.type === 0) {
         ctx.fillStyle = "red";
@@ -252,13 +257,18 @@ function draw() {
       }
       ctx.fillRect(item.x, item.y, itemWidth, itemHeight);
     });
-
+    
     ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
     ctx.fillRect(containerRed.x, containerRed.y-40, containerRed.width, containerRed.height+40);
     ctx.fillStyle = "rgba(0, 0, 255, 0.5)";
     ctx.fillRect(containerBlue.x, containerBlue.y-40, containerBlue.width, containerBlue.height+40);
     ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
     ctx.fillRect(containerGreen.x, containerGreen.y-40, containerGreen.width, containerGreen.height+40);
+
+    ctx.shadowColor = 'white';
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
 
     ctx.font = "24px Helvetica";
     ctx.textAlign = "left";
