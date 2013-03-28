@@ -235,7 +235,7 @@ function draw() {
         pointerActive = false;
       };
     });
-    score = containerRed.score + containerGreen.score + containerBlue.score;
+    totalScore = containerRed.score + containerGreen.score + containerBlue.score;
   };
  
   var render = function () {
@@ -260,17 +260,17 @@ function draw() {
     ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
     ctx.fillRect(containerGreen.x, containerGreen.y-40, containerGreen.width, containerGreen.height+40);
 
-    ctx.font = "16px Helvetica";
+    ctx.font = "24px Helvetica";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
-    ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-    ctx.fillText("Red: " + containerRed.score, 5, 5);
-    ctx.fillStyle = "rgba(0, 0, 255, 0.5)";
-    ctx.fillText("Blue: " + containerBlue.score, 5, 20);
-    ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
-    ctx.fillText("Green: " + containerGreen.score, 5, 35);
+    // ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+    // ctx.fillText("Red: " + containerRed.score, 5, 5);
+    // ctx.fillStyle = "rgba(0, 0, 255, 0.5)";
+    // ctx.fillText("Blue: " + containerBlue.score, 5, 20);
+    // ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
+    // ctx.fillText("Green: " + containerGreen.score, 5, 35);
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-    ctx.fillText("SCORE: " + score, 5, 50);
+    ctx.fillText("SCORE: " + totalScore, 5, 5);
   };
 
   var main = function () {
@@ -287,13 +287,17 @@ function draw() {
     item.x = parseInt(Math.random() * (canvas.width - 50));
     item.y = 20;
     item.type = parseInt(Math.random() * 3);
+    item.active = true;
+    pointerActive = false;
   });
+
   containerRed.x = (canvas.width/6)*1 - (containerWidth/2);
   containerRed.y = canvas.height - (containerHeight + 10);
   containerBlue.x = (canvas.width/6)*3 - (containerWidth/2);
   containerBlue.y = canvas.height - (containerHeight + 10);
   containerGreen.x = (canvas.width/6)*5 - (containerWidth/2);
   containerGreen.y = canvas.height - (containerHeight + 10);
+
   var then = Date.now();
   setInterval(main, 1);
 }
