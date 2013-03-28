@@ -13,8 +13,8 @@ function draw() {
   var itemWidth = 40;
   var itemHeight = 40;
 
-  var containerWidth = 50;
-  var containerHeight = 75;
+  var containerWidth = 100;
+  var containerHeight = 35;
 
   // ------------------------------
   // OBJECTS
@@ -222,7 +222,7 @@ function draw() {
     handleCollisions();
     items.forEach( function(item) {
       item.y += 0.1;
-      if((item.y+itemHeight) >= (canvas.height-containerHeight/2) || !item.active) {
+      if((item.y+itemHeight) >= (canvas.height) || !item.active) {
         item.x = parseInt(Math.random() * (canvas.width - 20) + 10);
         item.y = 20;
         item.type = parseInt(Math.random() * 3);
@@ -248,11 +248,11 @@ function draw() {
     });
 
     ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-    ctx.fillRect(containerRed.x, containerRed.y, containerRed.width, containerRed.height);
+    ctx.fillRect(containerRed.x, containerRed.y-40, containerRed.width, containerRed.height+40);
     ctx.fillStyle = "rgba(0, 0, 255, 0.5)";
-    ctx.fillRect(containerBlue.x, containerBlue.y, containerBlue.width, containerBlue.height);
+    ctx.fillRect(containerBlue.x, containerBlue.y-40, containerBlue.width, containerBlue.height+40);
     ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
-    ctx.fillRect(containerGreen.x, containerGreen.y, containerGreen.width, containerGreen.height);
+    ctx.fillRect(containerGreen.x, containerGreen.y-40, containerGreen.width, containerGreen.height+40);
 
     ctx.font = "16px Helvetica";
     ctx.textAlign = "left";
