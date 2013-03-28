@@ -13,7 +13,7 @@ function draw() {
   var itemWidth = 40;
   var itemHeight = 40;
 
-  var containerWidth = 100;
+  var containerWidth = 75;
   var containerHeight = 35;
 
   // ------------------------------
@@ -209,9 +209,14 @@ function draw() {
       containers.forEach(function(container) {
         if (collides(item, container)) {
           if (item.type === container.type) {
-            ++container.score;
-            item.active = false;
+            container.score += 100;
+          } else {
+            container.score -= 50;
+            if (container.score < 0) {
+              container.score = 0;
+            }
           }
+          item.active = false;
         }
       });
     });
@@ -230,6 +235,7 @@ function draw() {
         pointerActive = false;
       };
     });
+    score = containerRed.score + containerGreen.score + containerBlue.score;
   };
  
   var render = function () {
@@ -263,6 +269,8 @@ function draw() {
     ctx.fillText("Blue: " + containerBlue.score, 5, 20);
     ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
     ctx.fillText("Green: " + containerGreen.score, 5, 35);
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillText("SCORE: " + score, 5, 50);
   };
 
   var main = function () {
