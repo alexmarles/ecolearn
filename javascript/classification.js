@@ -276,7 +276,7 @@ function draw() {
   };
 
   items.forEach( function(item) {
-    item.x = parseInt(Math.random() * (canvas.width - 20) + 10);
+    item.x = parseInt(Math.random() * (canvas.width - 50));
     item.y = 20;
     item.type = parseInt(Math.random() * 3);
   });
