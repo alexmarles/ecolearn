@@ -14,6 +14,10 @@ function draw() {
   // ------------------------------
   // OBJECTS
   // ------------------------------
+  var timer = {
+    time: 0
+  }
+
   var pointer = {
     x: 0,
     y: 0,
@@ -25,7 +29,9 @@ function draw() {
     type: 0,
     x: 0,
     y: 0,
-    active: true
+    active: true,
+    bornTime: 0,
+    deathTime: 0
   };
 
   var item1 = {
@@ -33,7 +39,9 @@ function draw() {
     type: 0,
     x: 0,
     y: 0,
-    active: true
+    active: true,
+    bornTime: 0,
+    deathTime: 0
   };
 
   var item2 = {
@@ -41,7 +49,9 @@ function draw() {
     type: 0,
     x: 0,
     y: 0,
-    active: true
+    active: true,
+    bornTime: 0,
+    deathTime: 0
   };
 
   var item3 = {
@@ -49,7 +59,9 @@ function draw() {
     type: 0,
     x: 0,
     y: 0,
-    active: true
+    active: true,
+    bornTime: 0,
+    deathTime: 0
   };
 
   var item4 = {
@@ -57,7 +69,9 @@ function draw() {
     type: 0,
     x: 0,
     y: 0,
-    active: true
+    active: true,
+    bornTime: 0,
+    deathTime: 0
   };
 
   var items = [item0, item1, item2, item3, item4];
@@ -129,6 +143,7 @@ function draw() {
       items.forEach(function(item) {
         if (collides(item, pointer)) {
           item.active = false;
+          item.waitStart = timer.time;
           totalScore += 100;
         }
       });
@@ -137,15 +152,22 @@ function draw() {
 
   // Update game objects
   var update = function (modifier) {
+    timer.time += modifier;
     handleCollisions();
     items.forEach( function(item) {
       if(!item.active) {
         item.x = parseInt(Math.random() * (canvas.width - 20) + 10);
         item.y = parseInt(Math.random() * (canvas.height - 50));
         item.type = parseInt(Math.random() * 3);
-        item.active = true;
+        if(timer.time - item.deathTime >= 3) {
+          item.active = true;
+        }
         pointerActive = false;
-      };
+      } else {
+        if(timer.time - item.bornTime >= 5) {
+          item.active = false;
+        }
+      }
     });
   };
  
