@@ -128,7 +128,6 @@ function draw() {
     if (pointerActive) {
       items.forEach(function(item) {
         if (collides(item, pointer)) {
-          console.log("Collided!");
           item.active = false;
           totalScore += 100;
         }
