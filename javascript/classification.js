@@ -38,7 +38,8 @@ function draw() {
     width: itemWidth,
     height: itemHeight,
     deathTime: 0,
-    active: false
+    active: false,
+    picked: false
   };
 
   var item1 = {
@@ -49,7 +50,8 @@ function draw() {
     width: itemWidth,
     height: itemHeight,
     deathTime: 0,
-    active: false
+    active: false,
+    picked: false
   };
 
   var item2 = {
@@ -60,7 +62,8 @@ function draw() {
     width: itemWidth,
     height: itemHeight,
     deathTime: 0,
-    active: false
+    active: false,
+    picked: false
   };
 
   var item3 = {
@@ -71,7 +74,8 @@ function draw() {
     width: itemWidth,
     height: itemHeight,
     deathTime: 0,
-    active: false
+    active: false,
+    picked: false
   };
 
   var item4 = {
@@ -82,7 +86,8 @@ function draw() {
     width: itemWidth,
     height: itemHeight,
     deathTime: 0,
-    active: false
+    active: false,
+    picked: false
   };
 
   var items = [item0, item1, item2, item3, item4];
@@ -208,7 +213,7 @@ function draw() {
     if (pointerActive) {
       items.forEach(function(item) {
         if (collides(item, pointer) && !picked) {
-          itemsToMove.push(item);
+          item.picked = true;
           picked = true;
         }
       });
@@ -225,14 +230,20 @@ function draw() {
               container.score = 0;
             }
           }
+          item.picked = false;
           item.active = false;
           item.deathTime = timer.time;
         }
       });
-      if((item.y+itemHeight) >= canvas.height) {
+      if ((item.y+itemHeight) >= canvas.height) {
+        item.picked = false;
         item.active = false;
         item.deathTime = timer.time;
       }
+    });
+
+    items.forEach( function(item) {
+      itemsToMove.push(item);
     });
   };
 
@@ -249,7 +260,7 @@ function draw() {
     handleCollisions();
     items.forEach( function(item) {
       item.y += 0.3;
-      if(!item.active) {
+      if (!item.active) {
         initializeItem(item);
         if (timer.time - item.deathTime >= 3) {
           item.active = true;
