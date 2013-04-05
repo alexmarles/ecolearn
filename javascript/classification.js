@@ -19,6 +19,10 @@ function draw() {
   // ------------------------------
   // OBJECTS
   // ------------------------------
+  var timer = {
+    time: 0
+  }
+
   var pointer = {
     x: 0,
     y: 0,
@@ -33,7 +37,8 @@ function draw() {
     y: 0,
     width: itemWidth,
     height: itemHeight,
-    active: true
+    deathTime: 0,
+    active: false
   };
 
   var item1 = {
@@ -43,7 +48,8 @@ function draw() {
     y: 0,
     width: itemWidth,
     height: itemHeight,
-    active: true
+    deathTime: 0,
+    active: false
   };
 
   var item2 = {
@@ -53,7 +59,8 @@ function draw() {
     y: 0,
     width: itemWidth,
     height: itemHeight,
-    active: true
+    deathTime: 0,
+    active: false
   };
 
   var item3 = {
@@ -63,7 +70,8 @@ function draw() {
     y: 0,
     width: itemWidth,
     height: itemHeight,
-    active: true
+    deathTime: 0,
+    active: false
   };
 
   var item4 = {
@@ -73,7 +81,8 @@ function draw() {
     y: 0,
     width: itemWidth,
     height: itemHeight,
-    active: true
+    deathTime: 0,
+    active: false
   };
 
   var items = [item0, item1, item2, item3, item4];
@@ -217,25 +226,55 @@ function draw() {
             }
           }
           item.active = false;
+          item.deathTime = timer.time;
         }
       });
+      if((item.y+itemHeight) >= canvas.height) {
+        item.active = false;
+        item.deathTime = timer.time;
+      }
     });
+  };
+
+  // Sets random position and type for an item
+  var initializeItem = function (item) {
+      item.x = parseInt(Math.random() * (canvas.width - itemHeight*2) + itemHeight);
+      item.y = itemHeight;
+      item.type = parseInt(Math.random() * 3);
   };
 
   // Update game objects
   var update = function (modifier) {
+    timer.time += modifier;
     handleCollisions();
     items.forEach( function(item) {
-      item.y += 0.1;
-      if((item.y+itemHeight) >= (canvas.height) || !item.active) {
-        item.x = parseInt(Math.random() * (canvas.width - 20) + 10);
-        item.y = 20;
-        item.type = parseInt(Math.random() * 3);
-        item.active = true;
-        pointerActive = false;
+      item.y += 0.3;
+      if(!item.active) {
+        initializeItem(item);
+        if (timer.time - item.deathTime >= 3) {
+          item.active = true;
+        }
       };
     });
     totalScore = containerRed.score + containerGreen.score + containerBlue.score;
+    switch(parseInt(timer.time)) {
+      case 2:
+        items[0].active = true;
+        items[0].birthTime = timer.time;
+        items[1].active = true;
+        items[1].birthTime = timer.time;
+        break;
+      case 4:
+        items[2].active = true;
+        items[2].birthTime = timer.time;
+        items[3].active = true;
+        items[3].birthTime = timer.time;
+        break;
+      case 5:
+        items[4].active = true;
+        items[4].birthTime = timer.time;
+        break;
+    }
   };
  
   var render = function () {
@@ -248,14 +287,20 @@ function draw() {
     ctx.shadowOffsetY = 2;
 
     items.forEach( function(item) {
-      if(item.type === 0) {
-        ctx.fillStyle = "red";
-      } else if(item.type === 1) {
-        ctx.fillStyle = "blue";
-      } else if(item.type === 2) {
-        ctx.fillStyle = "green";
+      if (item.active) {
+        switch(item.type) {
+          case 0:
+            ctx.fillStyle = "red";
+            break;
+          case 1:
+            ctx.fillStyle = "blue";
+            break;
+          case 2:
+            ctx.fillStyle = "green";
+            break;
+        }
+        ctx.fillRect(item.x, item.y, itemWidth, itemHeight);
       }
-      ctx.fillRect(item.x, item.y, itemWidth, itemHeight);
     });
     
     ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
@@ -273,15 +318,22 @@ function draw() {
     ctx.font = "24px Helvetica";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
-    // ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-    // ctx.fillText("Red: " + containerRed.score, 5, 5);
-    // ctx.fillStyle = "rgba(0, 0, 255, 0.5)";
-    // ctx.fillText("Blue: " + containerBlue.score, 5, 20);
-    // ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
-    // ctx.fillText("Green: " + containerGreen.score, 5, 35);
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     ctx.fillText("SCORE: " + totalScore, 5, 5);
+    ctx.fillText("TIME: " + parseInt(timer.time), 250, 5);
   };
+
+  // Request Animation Frame for loop
+  var requestAnimFrame = (function(){
+    return  window.requestAnimationFrame       ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame    ||
+    function( callback ){
+      window.setTimeout(callback, 1000 / 60);
+    };
+  })();
+
+  // Main program
 
   var main = function () {
     var now = Date.now();
@@ -291,14 +343,12 @@ function draw() {
     render();
 
     then = now;
+
+    requestAnimFrame(main);
   };
 
   items.forEach( function(item) {
-    item.x = parseInt(Math.random() * (canvas.width - 50));
-    item.y = 20;
-    item.type = parseInt(Math.random() * 3);
-    item.active = true;
-    pointerActive = false;
+    initializeItem(item);
   });
 
   containerRed.x = (canvas.width/6)*1 - (containerWidth/2);
@@ -309,5 +359,5 @@ function draw() {
   containerGreen.y = canvas.height - (containerHeight + 10);
 
   var then = Date.now();
-  setInterval(main, 1);
+  main();
 }
