@@ -30,7 +30,7 @@ function draw() {
     x: 0,
     y: 0,
     active: true,
-    bornTime: 0,
+    birthTime: 0,
     deathTime: 0
   };
 
@@ -40,7 +40,7 @@ function draw() {
     x: 0,
     y: 0,
     active: true,
-    bornTime: 0,
+    birthTime: 0,
     deathTime: 0
   };
 
@@ -50,7 +50,7 @@ function draw() {
     x: 0,
     y: 0,
     active: true,
-    bornTime: 0,
+    birthTime: 0,
     deathTime: 0
   };
 
@@ -60,7 +60,7 @@ function draw() {
     x: 0,
     y: 0,
     active: true,
-    bornTime: 0,
+    birthTime: 0,
     deathTime: 0
   };
 
@@ -70,7 +70,7 @@ function draw() {
     x: 0,
     y: 0,
     active: true,
-    bornTime: 0,
+    birthTime: 0,
     deathTime: 0
   };
 
@@ -143,8 +143,20 @@ function draw() {
       items.forEach(function(item) {
         if (collides(item, pointer)) {
           item.active = false;
-          item.waitStart = timer.time;
-          totalScore += 100;
+          pointerActive = false;
+          item.deathTime = timer.time;
+          switch(item.type)
+          {
+            case 0:
+              totalScore += 1;
+              break;
+            case 1:
+              totalScore += 10;
+              break;
+            case 2:
+              totalScore += 50;
+              break;
+          }
         }
       });
     }
@@ -156,16 +168,24 @@ function draw() {
     handleCollisions();
     items.forEach( function(item) {
       if(!item.active) {
-        item.x = parseInt(Math.random() * (canvas.width - 20) + 10);
-        item.y = parseInt(Math.random() * (canvas.height - 50));
-        item.type = parseInt(Math.random() * 3);
+        item.x = parseInt(Math.random() * (canvas.width - 40) + 20);
+        item.y = parseInt(Math.random() * (canvas.height - 40) + 20);
+        item.type = 0;
         if(timer.time - item.deathTime >= 3) {
           item.active = true;
+          item.birthTime = timer.time;
         }
-        pointerActive = false;
       } else {
-        if(timer.time - item.bornTime >= 5) {
+        if(timer.time - item.birthTime >= 2) {
+          item.type = 1;
+        }
+        if(timer.time - item.birthTime >= 4) {
+          item.type = 2;
+        }
+        if(timer.time - item.birthTime >= 5) {
           item.active = false;
+          item.deathTime = timer.time;
+          totalScore -= 100;
         }
       }
     });
@@ -181,20 +201,26 @@ function draw() {
     ctx.shadowOffsetY = 2;
 
     items.forEach( function(item) {
-      ctx.beginPath();
-      ctx.arc(item.x,item.y,item.radius,0,2*Math.PI);
-      if(item.type === 0) {
-        ctx.fillStyle = "red";
-        ctx.strokeStyle = "red";
-      } else if(item.type === 1) {
-        ctx.fillStyle = "blue";
-        ctx.strokeStyle = "blue";
-      } else if(item.type === 2) {
-        ctx.fillStyle = "green";
-        ctx.strokeStyle = "green";
+      if(item.active) {
+        ctx.beginPath();
+        ctx.arc(item.x,item.y,item.radius,0,2*Math.PI);
+        switch(item.type) {
+          case 0:
+            ctx.fillStyle = "green";
+            ctx.strokeStyle = "green";
+            break;
+          case 1:
+            ctx.fillStyle = "yellow";
+            ctx.strokeStyle = "yellow";
+            break;
+          case 2:
+            ctx.fillStyle = "red";
+            ctx.strokeStyle = "red";
+            break;
+        }
+        ctx.fill();
+        ctx.stroke();
       }
-      ctx.fill();
-      ctx.stroke();
     });
 
     ctx.shadowColor = 'white';
@@ -207,6 +233,7 @@ function draw() {
     ctx.textBaseline = "top";
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     ctx.fillText("SCORE: " + totalScore, 5, 5);
+    ctx.fillText("TIME: " + parseInt(timer.time), 250, 5);
   };
 
   var main = function () {
@@ -220,11 +247,11 @@ function draw() {
   };
 
   items.forEach( function(item) {
-    item.x = parseInt(Math.random() * (canvas.width - 50));
-    item.y = parseInt(Math.random() * (canvas.height - 50));
-    item.type = parseInt(Math.random() * 3);
+    item.x = parseInt(Math.random() * (canvas.width - 40) + 20);
+    item.y = parseInt(Math.random() * (canvas.height - 40) + 20);
+    item.type = 0;
     item.active = true;
-    pointerActive = false;
+    item.birthTime = timer.time;
   });
 
   var then = Date.now();
