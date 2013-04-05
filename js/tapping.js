@@ -29,7 +29,7 @@ function draw() {
     type: 0,
     x: 0,
     y: 0,
-    active: true,
+    active: false,
     birthTime: 0,
     deathTime: 0
   };
@@ -39,7 +39,7 @@ function draw() {
     type: 0,
     x: 0,
     y: 0,
-    active: true,
+    active: false,
     birthTime: 0,
     deathTime: 0
   };
@@ -49,7 +49,7 @@ function draw() {
     type: 0,
     x: 0,
     y: 0,
-    active: true,
+    active: false,
     birthTime: 0,
     deathTime: 0
   };
@@ -59,7 +59,7 @@ function draw() {
     type: 0,
     x: 0,
     y: 0,
-    active: true,
+    active: false,
     birthTime: 0,
     deathTime: 0
   };
@@ -69,7 +69,7 @@ function draw() {
     type: 0,
     x: 0,
     y: 0,
-    active: true,
+    active: false,
     birthTime: 0,
     deathTime: 0
   };
@@ -161,16 +161,21 @@ function draw() {
       });
     }
   };
+  
+  // Sets random position and type for an item
+  var initializeItem = function (item) {
+      item.x = parseInt(Math.random() * (canvas.width - 40) + 20);
+      item.y = parseInt(Math.random() * (canvas.height - 40) + 20);
+      item.type = 0;
+  };
 
-  // Update game objects
+  // UPDATE game objects
   var update = function (modifier) {
     timer.time += modifier;
     handleCollisions();
     items.forEach( function(item) {
       if(!item.active) {
-        item.x = parseInt(Math.random() * (canvas.width - 40) + 20);
-        item.y = parseInt(Math.random() * (canvas.height - 40) + 20);
-        item.type = 0;
+        initializeItem(item);
         if(timer.time - item.deathTime >= 3) {
           item.active = true;
           item.birthTime = timer.time;
@@ -189,7 +194,27 @@ function draw() {
         }
       }
     });
+    switch(parseInt(timer.time)) {
+      case 2:
+        items[0].active = true;
+        items[0].birthTime = timer.time;
+        items[1].active = true;
+        items[1].birthTime = timer.time;
+        break;
+      case 4:
+        items[2].active = true;
+        items[2].birthTime = timer.time;
+        items[3].active = true;
+        items[3].birthTime = timer.time;
+        break;
+      case 5:
+        items[4].active = true;
+        items[4].birthTime = timer.time;
+        break;
+    }
   };
+
+  // RENDER game objects
  
   var render = function () {
     ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
@@ -242,16 +267,13 @@ function draw() {
 
     update(delta/1000);
     render();
+    requestAnimationFrame(main);
 
     then = now;
   };
 
   items.forEach( function(item) {
-    item.x = parseInt(Math.random() * (canvas.width - 40) + 20);
-    item.y = parseInt(Math.random() * (canvas.height - 40) + 20);
-    item.type = 0;
-    item.active = true;
-    item.birthTime = timer.time;
+    initializeItem(item);
   });
 
   var then = Date.now();
