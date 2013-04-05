@@ -9,7 +9,7 @@ function draw() {
   // ------------------------------
   // CONSTANTS
   // ------------------------------
-  var itemRadius = 20;
+  var itemRadius = 50;
 
   // ------------------------------
   // OBJECTS
@@ -164,8 +164,8 @@ function draw() {
   
   // Sets random position and type for an item
   var initializeItem = function (item) {
-      item.x = parseInt(Math.random() * (canvas.width - 40) + 20);
-      item.y = parseInt(Math.random() * (canvas.height - 40) + 20);
+      item.x = parseInt(Math.random() * (canvas.width - itemRadius*2) + itemRadius);
+      item.y = parseInt(Math.random() * (canvas.height - itemRadius*2) + itemRadius);
       item.type = 0;
   };
 
@@ -261,15 +261,28 @@ function draw() {
     ctx.fillText("TIME: " + parseInt(timer.time), 250, 5);
   };
 
+  // Request Animation Frame for loop
+  var requestAnimFrame = (function(){
+    return  window.requestAnimationFrame       ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame    ||
+    function( callback ){
+      window.setTimeout(callback, 1000 / 60);
+    };
+  })();
+
+  // Main program
+
   var main = function () {
     var now = Date.now();
     var delta = now - then;
 
     update(delta/1000);
     render();
-    requestAnimationFrame(main);
 
     then = now;
+    
+    requestAnimFrame(main);
   };
 
   items.forEach( function(item) {
@@ -277,5 +290,5 @@ function draw() {
   });
 
   var then = Date.now();
-  setInterval(main, 1);
+  main();
 }
