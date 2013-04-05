@@ -157,6 +157,9 @@ function draw() {
               totalScore += 50;
               break;
           }
+          if (totalScore < 0) {
+            totalScore = 0;
+          }
         }
       });
     }
