@@ -128,7 +128,7 @@ function draw() {
 
   var totalScore = 0;
   var pointerActive = false;
-  var picked = false;
+  var hasObject = false;
 
   // ------------------------------
   // CONTROLS
@@ -152,8 +152,10 @@ function draw() {
 
   addEventListener("mouseup", function (e) {
     pointerActive = false;
-    picked = false;
-    itemsToMove = [];
+    hasObject = false;
+    items.forEach(function(item) {
+      item.picked = false;
+    });
   }, false);
   
   addEventListener("mousemove", function (e) {
@@ -183,8 +185,10 @@ function draw() {
 
   addEventListener("touchend", function (e) {
     pointerActive = false;
-    picked = false;
-    itemsToMove = [];
+    hasObject = false;
+    items.forEach(function(item) {
+      item.picked = false;
+    });
   }, false);
 
   addEventListener("touchmove", function (e) {
@@ -212,9 +216,9 @@ function draw() {
   var handleCollisions = function () {
     if (pointerActive) {
       items.forEach(function(item) {
-        if (collides(item, pointer) && !picked) {
+        if (collides(item, pointer) && !hasObject) {
           item.picked = true;
-          picked = true;
+          hasObject = true;
         }
       });
     }
@@ -241,10 +245,6 @@ function draw() {
         item.deathTime = timer.time;
       }
     });
-
-    items.forEach( function(item) {
-      itemsToMove.push(item);
-    });
   };
 
   // Sets random position and type for an item
@@ -256,10 +256,33 @@ function draw() {
 
   // Update game objects
   var update = function (modifier) {
-    timer.time += modifier;
+    if (timer.time <= 5) {
+      switch(parseInt(timer.time)) {
+        case 2:
+          items[0].active = true;
+          items[0].birthTime = timer.time;
+          items[1].active = true;
+          items[1].birthTime = timer.time;
+          break;
+        case 4:
+          items[2].active = true;
+          items[2].birthTime = timer.time;
+          items[3].active = true;
+          items[3].birthTime = timer.time;
+          break;
+        case 5:
+          items[4].active = true;
+          items[4].birthTime = timer.time;
+          break;
+      }
+    }
     handleCollisions();
+    itemsToMove = [];
     items.forEach( function(item) {
-      item.y += 0.3;
+      if (item.picked) {
+        itemsToMove.push(item);
+      }
+      item.y += 0.5;
       if (!item.active) {
         initializeItem(item);
         if (timer.time - item.deathTime >= 3) {
@@ -268,24 +291,6 @@ function draw() {
       };
     });
     totalScore = containerRed.score + containerGreen.score + containerBlue.score;
-    switch(parseInt(timer.time)) {
-      case 2:
-        items[0].active = true;
-        items[0].birthTime = timer.time;
-        items[1].active = true;
-        items[1].birthTime = timer.time;
-        break;
-      case 4:
-        items[2].active = true;
-        items[2].birthTime = timer.time;
-        items[3].active = true;
-        items[3].birthTime = timer.time;
-        break;
-      case 5:
-        items[4].active = true;
-        items[4].birthTime = timer.time;
-        break;
-    }
   };
  
   var render = function () {
@@ -315,11 +320,11 @@ function draw() {
     });
     
     ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-    ctx.fillRect(containerRed.x, containerRed.y-40, containerRed.width, containerRed.height+40);
+    ctx.fillRect(containerRed.x, containerRed.y-itemHeight, containerRed.width, containerRed.height+itemHeight);
     ctx.fillStyle = "rgba(0, 0, 255, 0.5)";
-    ctx.fillRect(containerBlue.x, containerBlue.y-40, containerBlue.width, containerBlue.height+40);
+    ctx.fillRect(containerBlue.x, containerBlue.y-itemHeight, containerBlue.width, containerBlue.height+itemHeight);
     ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
-    ctx.fillRect(containerGreen.x, containerGreen.y-40, containerGreen.width, containerGreen.height+40);
+    ctx.fillRect(containerGreen.x, containerGreen.y-itemHeight, containerGreen.width, containerGreen.height+itemHeight);
 
     ctx.shadowColor = 'white';
     ctx.shadowBlur = 0;
@@ -349,6 +354,7 @@ function draw() {
   var main = function () {
     var now = Date.now();
     var delta = now - then;
+    timer.time += (delta/1000);
 
     update(delta/1000);
     render();
