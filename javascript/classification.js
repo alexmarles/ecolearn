@@ -1,7 +1,10 @@
 function draw() {
 
   // Creating canvas
-  var canvas = document.getElementById("game");
+  // var canvas = document.getElementById("game");
+  var canvas = document.createElement(navigator.isCocoonJS ? 'screencanvas' : 'canvas');
+  canvas.id = 'game';
+  document.body.appendChild(canvas);
   var ctx = canvas.getContext("2d");
   canvas.width = 360;
   canvas.height = 640;
