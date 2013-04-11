@@ -18,18 +18,18 @@ function main() {
   var containerWidth = 75;
   var containerHeight = 35;
 
+  var frequency = 2;
+
   // ------------------------------
   // CLASSES
   // ------------------------------
 
   function Item() {
-    this.x = 0;
-    this.y = 0;
-    this.type = 0;
+    this.x = parseInt(Math.random() * (canvas.width - itemHeight*2) + itemHeight);
+    this.y = itemHeight;
+    this.type = parseInt(Math.random() * 3);
     this.width = itemWidth;
     this.height = itemHeight;
-    this.deathTime = 0;
-    this.active = false;
     this.picked = false;
   }
 
@@ -57,7 +57,7 @@ function main() {
   };
 
 
-  var items = [new Item(), new Item(), new Item(), new Item(), new Item()];
+  var items = [];
   var itemsToMove = [];
 
   var containers = [new Container(0), new Container(1), new Container(2)];
@@ -174,15 +174,11 @@ function main() {
               container.score = 0;
             }
           }
-          item.picked = false;
-          item.active = false;
-          item.deathTime = timer.time;
+          items.splice(items.indexOf(item),1);
         }
       });
       if ((item.y+itemHeight) >= canvas.height) {
-        item.picked = false;
-        item.active = false;
-        item.deathTime = timer.time;
+        items.splice(items.indexOf(item),1);
       }
     });
   };
@@ -196,25 +192,8 @@ function main() {
 
   // Update game objects
   var update = function (modifier) {
-    if (timer.time <= 5) {
-      switch(parseInt(timer.time)) {
-        case 2:
-          items[0].active = true;
-          items[0].birthTime = timer.time;
-          items[1].active = true;
-          items[1].birthTime = timer.time;
-          break;
-        case 4:
-          items[2].active = true;
-          items[2].birthTime = timer.time;
-          items[3].active = true;
-          items[3].birthTime = timer.time;
-          break;
-        case 5:
-          items[4].active = true;
-          items[4].birthTime = timer.time;
-          break;
-      }
+    if (timer.time%frequency == 0) {
+      items.push(new Item());
     }
     handleCollisions();
     itemsToMove = [];
@@ -223,12 +202,6 @@ function main() {
         itemsToMove.push(item);
       }
       item.y += 0.5;
-      if (!item.active) {
-        initializeItem(item);
-        if (timer.time - item.deathTime >= 3) {
-          item.active = true;
-        }
-      };
     });
     totalScore = containers[0].score + containers[1].score + containers[2].score;
   };
@@ -243,20 +216,18 @@ function main() {
     ctx.shadowOffsetY = 2;
 
     items.forEach( function(item) {
-      if (item.active) {
-        switch(item.type) {
-          case 0:
-            ctx.fillStyle = "red";
-            break;
-          case 1:
-            ctx.fillStyle = "blue";
-            break;
-          case 2:
-            ctx.fillStyle = "green";
-            break;
-        }
-        ctx.fillRect(item.x, item.y, itemWidth, itemHeight);
+      switch(item.type) {
+        case 0:
+          ctx.fillStyle = "red";
+          break;
+        case 1:
+          ctx.fillStyle = "blue";
+          break;
+        case 2:
+          ctx.fillStyle = "green";
+          break;
       }
+      ctx.fillRect(item.x, item.y, itemWidth, itemHeight);
     });
     
     ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
