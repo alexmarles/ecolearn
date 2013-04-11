@@ -1,7 +1,6 @@
 function main() {
 
   // Creating canvas
-  // var canvas = document.getElementById("game");
   var canvas = document.createElement(navigator.isCocoonJS ? 'screencanvas' : 'canvas');
   canvas.id = 'game';
   document.body.appendChild(canvas);
@@ -20,6 +19,30 @@ function main() {
   var containerHeight = 35;
 
   // ------------------------------
+  // CLASSES
+  // ------------------------------
+
+  function Item() {
+    this.x = 0;
+    this.y = 0;
+    this.type = 0;
+    this.width = itemWidth;
+    this.height = itemHeight;
+    this.deathTime = 0;
+    this.active = false;
+    this.picked = false;
+  }
+
+  function Container(type) {
+    this.x = 0;
+    this.y = 0;
+    this.type = type;
+    this.width = containerWidth;
+    this.height = containerHeight;
+    this.score = 0;
+  }
+
+  // ------------------------------
   // OBJECTS
   // ------------------------------
   var timer = {
@@ -33,97 +56,11 @@ function main() {
     height: 1
   };
 
-  var item0 = {
-    speed: itemSpeed,
-    type: 0,
-    x: 0,
-    y: 0,
-    width: itemWidth,
-    height: itemHeight,
-    deathTime: 0,
-    active: false,
-    picked: false
-  };
 
-  var item1 = {
-    speed: itemSpeed,
-    type: 0,
-    x: 0,
-    y: 0,
-    width: itemWidth,
-    height: itemHeight,
-    deathTime: 0,
-    active: false,
-    picked: false
-  };
-
-  var item2 = {
-    speed: itemSpeed,
-    type: 0,
-    x: 0,
-    y: 0,
-    width: itemWidth,
-    height: itemHeight,
-    deathTime: 0,
-    active: false,
-    picked: false
-  };
-
-  var item3 = {
-    speed: itemSpeed,
-    type: 0,
-    x: 0,
-    y: 0,
-    width: itemWidth,
-    height: itemHeight,
-    deathTime: 0,
-    active: false,
-    picked: false
-  };
-
-  var item4 = {
-    speed: itemSpeed,
-    type: 0,
-    x: 0,
-    y: 0,
-    width: itemWidth,
-    height: itemHeight,
-    deathTime: 0,
-    active: false,
-    picked: false
-  };
-
-  var items = [item0, item1, item2, item3, item4];
+  var items = [new Item(), new Item(), new Item(), new Item(), new Item()];
   var itemsToMove = [];
 
-  var containerRed = {
-    type: 0,
-    x: 0,
-    y: 0,
-    width: containerWidth,
-    height: containerHeight,
-    score: 0
-  };
-
-  var containerBlue = {
-    type: 1,
-    x: 0,
-    y: 0,
-    width: containerWidth,
-    height: containerHeight,
-    score: 0
-  };
-
-  var containerGreen = {
-    type: 2,
-    x: 0,
-    y: 0,
-    width: containerWidth,
-    height: containerHeight,
-    score: 0
-  };
-  
-  var containers = [containerRed, containerGreen, containerBlue];
+  var containers = [new Container(0), new Container(1), new Container(2)];
 
   // ------------------------------
   // VARIABLES
@@ -293,7 +230,7 @@ function main() {
         }
       };
     });
-    totalScore = containerRed.score + containerGreen.score + containerBlue.score;
+    totalScore = containers[0].score + containers[1].score + containers[2].score;
   };
  
   var render = function () {
@@ -323,11 +260,11 @@ function main() {
     });
     
     ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-    ctx.fillRect(containerRed.x, containerRed.y-itemHeight, containerRed.width, containerRed.height+itemHeight);
+    ctx.fillRect(containers[0].x, containers[0].y-itemHeight, containers[0].width, containers[0].height+itemHeight);
     ctx.fillStyle = "rgba(0, 0, 255, 0.5)";
-    ctx.fillRect(containerBlue.x, containerBlue.y-itemHeight, containerBlue.width, containerBlue.height+itemHeight);
+    ctx.fillRect(containers[1].x, containers[1].y-itemHeight, containers[1].width, containers[1].height+itemHeight);
     ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
-    ctx.fillRect(containerGreen.x, containerGreen.y-itemHeight, containerGreen.width, containerGreen.height+itemHeight);
+    ctx.fillRect(containers[2].x, containers[2].y-itemHeight, containers[2].width, containers[2].height+itemHeight);
 
     ctx.shadowColor = 'white';
     ctx.shadowBlur = 0;
@@ -371,12 +308,12 @@ function main() {
     initializeItem(item);
   });
 
-  containerRed.x = (canvas.width/6)*1 - (containerWidth/2);
-  containerRed.y = canvas.height - (containerHeight + 10);
-  containerBlue.x = (canvas.width/6)*3 - (containerWidth/2);
-  containerBlue.y = canvas.height - (containerHeight + 10);
-  containerGreen.x = (canvas.width/6)*5 - (containerWidth/2);
-  containerGreen.y = canvas.height - (containerHeight + 10);
+  containers[0].x = (canvas.width/6)*1 - (containerWidth/2);
+  containers[0].y = canvas.height - (containerHeight + 10);
+  containers[1].x = (canvas.width/6)*3 - (containerWidth/2);
+  containers[1].y = canvas.height - (containerHeight + 10);
+  containers[2].x = (canvas.width/6)*5 - (containerWidth/2);
+  containers[2].y = canvas.height - (containerHeight + 10);
 
   var then = Date.now();
   loop();
