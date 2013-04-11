@@ -1,4 +1,4 @@
-function draw() {
+function main() {
 
   // Creating canvas
   // var canvas = document.getElementById("game");
@@ -352,9 +352,9 @@ function draw() {
     };
   })();
 
-  // Main program
+  // Loop
 
-  var main = function () {
+  var loop = function () {
     var now = Date.now();
     var delta = now - then;
     timer.time += (delta/1000);
@@ -364,7 +364,7 @@ function draw() {
 
     then = now;
 
-    requestAnimFrame(main);
+    requestAnimFrame(loop);
   };
 
   items.forEach( function(item) {
@@ -379,5 +379,5 @@ function draw() {
   containerGreen.y = canvas.height - (containerHeight + 10);
 
   var then = Date.now();
-  main();
+  loop();
 }
