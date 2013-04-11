@@ -25,7 +25,7 @@ function main() {
   // ------------------------------
 
   function Item() {
-    this.x = parseInt(Math.random() * (canvas.width - itemHeight*2) + itemHeight);
+    this.x = parseInt(Math.random() * (canvas.width - itemWidth));
     this.y = itemHeight;
     this.type = parseInt(Math.random() * 3);
     this.width = itemWidth;
@@ -46,7 +46,8 @@ function main() {
   // OBJECTS
   // ------------------------------
   var timer = {
-    time: 0
+    time: 0,
+    lastWave: 0
   }
 
   var pointer = {
@@ -192,8 +193,9 @@ function main() {
 
   // Update game objects
   var update = function (modifier) {
-    if (timer.time%frequency == 0) {
+    if (timer.time - timer.lastWave > frequency) {
       items.push(new Item());
+      timer.lastWave = timer.time;
     }
     handleCollisions();
     itemsToMove = [];
