@@ -19,7 +19,7 @@ function main() {
   var containerHeight = 35;
 
   var frequency = 2;
-  var speed = 0.5;
+  var speed = 50;
 
   // ------------------------------
   // CLASSES
@@ -31,7 +31,10 @@ function main() {
     this.type = parseInt(Math.random() * 3);
     this.width = itemWidth;
     this.height = itemHeight;
+    this.image = new Image();
+    this.image.src = "images/poke"+this.type+".png";
     this.picked = false;
+    this.rotation = 0;
   }
 
   function Container(type) {
@@ -208,7 +211,10 @@ function main() {
       if (item.picked) {
         itemsToMove.push(item);
       }
-      item.y += speed;
+      item.y += speed * modifier;
+      if (!item.picked) {
+        item.rotation += 100 * modifier;
+      }
     });
   };
  
@@ -222,18 +228,13 @@ function main() {
     ctx.shadowOffsetY = 2;
 
     items.forEach( function(item) {
-      switch(item.type) {
-        case 0:
-          ctx.fillStyle = "red";
-          break;
-        case 1:
-          ctx.fillStyle = "blue";
-          break;
-        case 2:
-          ctx.fillStyle = "green";
-          break;
-      }
-      ctx.fillRect(item.x, item.y, itemWidth, itemHeight);
+      ctx.save();
+      ctx.translate(item.x, item.y);
+      ctx.translate(itemWidth / 2, itemHeight / 2);
+      ctx.rotate(item.rotation * (Math.PI / 180));
+      ctx.translate(-itemWidth / 2, -itemHeight / 2);
+      ctx.drawImage(item.image, 0, 0, item.width, item.height);
+      ctx.restore();
     });
     
     ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
@@ -268,7 +269,6 @@ function main() {
   })();
 
   // Loop
-
   var loop = function () {
     var now = Date.now();
     var delta = now - then;
