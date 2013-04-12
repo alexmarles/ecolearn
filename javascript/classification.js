@@ -11,10 +11,6 @@ function main() {
   // ------------------------------
   // CONSTANTS
   // ------------------------------
-  var itemSpeed = 150;
-  var itemWidth = 40;
-  var itemHeight = 40;
-
   var containerWidth = 75;
   var containerHeight = 35;
 
@@ -26,17 +22,17 @@ function main() {
   // ------------------------------
 
   function Item() {
-    this.x = parseInt(Math.random() * (canvas.width - itemWidth));
-    this.y = itemHeight;
     this.type = parseInt(Math.random() * 3);
-    this.width = itemWidth;
-    this.height = itemHeight;
-    this.image = new Image();
-    this.image.src = "images/poke"+this.type+".png";
+    this.image = loadImage("images/poke"+this.type+".png");
+    //TODO: get width and height from image
+    this.width = 40;
+    this.height = 40;
+    this.x = parseInt(Math.random() * (canvas.width - this.width));
+    this.y = this.height;
     this.picked = false;
-    this.speed = 50;
+    this.speed = speed;
     this.rotation = 0;
-  }
+  };
 
   Item.prototype.rotate = function() {
     ctx.save();
@@ -162,6 +158,13 @@ function main() {
   // FUNCTIONS
   // ------------------------------
 
+  // Load image
+  var loadImage = function (name) {
+    var image = new Image();
+    image.src = name;
+    return image;
+  };
+
   // Check collision
   var collides = function (a, b) {
     return a.x < b.x + b.width &&
@@ -196,18 +199,11 @@ function main() {
           items.splice(items.indexOf(item),1);
         }
       });
-      if ((item.y+itemHeight) >= canvas.height) {
+      if ((item.y+item.height) >= canvas.height) {
         items.splice(items.indexOf(item),1);
         totalScore -= 100;
       }
     });
-  };
-
-  // Sets random position and type for an item
-  var initializeItem = function (item) {
-      item.x = parseInt(Math.random() * (canvas.width - itemHeight*2) + itemHeight);
-      item.y = itemHeight;
-      item.type = parseInt(Math.random() * 3);
   };
 
   // Update game objects
@@ -254,11 +250,11 @@ function main() {
     });
     
     ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-    ctx.fillRect(containers[0].x, containers[0].y-itemHeight, containers[0].width, containers[0].height+itemHeight);
+    ctx.fillRect(containers[0].x, containers[0].y-containerHeight, containers[0].width, containers[0].height+containerHeight);
     ctx.fillStyle = "rgba(0, 0, 255, 0.5)";
-    ctx.fillRect(containers[1].x, containers[1].y-itemHeight, containers[1].width, containers[1].height+itemHeight);
+    ctx.fillRect(containers[1].x, containers[1].y-containerHeight, containers[1].width, containers[1].height+containerHeight);
     ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
-    ctx.fillRect(containers[2].x, containers[2].y-itemHeight, containers[2].width, containers[2].height+itemHeight);
+    ctx.fillRect(containers[2].x, containers[2].y-containerHeight, containers[2].width, containers[2].height+containerHeight);
 
     ctx.shadowColor = 'white';
     ctx.shadowBlur = 0;
@@ -297,10 +293,6 @@ function main() {
 
     requestAnimFrame(loop);
   };
-
-  items.forEach( function(item) {
-    initializeItem(item);
-  });
 
   containers[0].x = (canvas.width/6)*1 - (containerWidth/2);
   containers[0].y = canvas.height - (containerHeight + 10);
