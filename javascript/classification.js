@@ -19,6 +19,7 @@ function main() {
   var containerHeight = 35;
 
   var frequency = 2;
+  var speed = 0.5;
 
   // ------------------------------
   // CLASSES
@@ -252,7 +253,8 @@ function main() {
     ctx.textBaseline = "top";
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     ctx.fillText("SCORE: " + totalScore, 5, 5);
-    ctx.fillText("TIME: " + parseInt(timer.time), 250, 5);
+    ctx.textAlign = "right";
+    ctx.fillText("TIME: " + parseInt(timer.time), 355, 5);
   };
 
   // Request Animation Frame for loop
