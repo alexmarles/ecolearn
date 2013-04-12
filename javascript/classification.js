@@ -39,7 +39,8 @@ function main() {
     this.type = type;
     this.width = containerWidth;
     this.height = containerHeight;
-    this.score = 0;
+    this.hits = 0;
+    this.misses = 0;
   }
 
   // ------------------------------
@@ -168,11 +169,13 @@ function main() {
       containers.forEach(function(container) {
         if (collides(item, container)) {
           if (item.type === container.type) {
-            container.score += 100;
+            totalScore += 50;
+            ++container.hits;
           } else {
-            container.score -= 50;
-            if (container.score < 0) {
-              container.score = 0;
+            totalScore -= 100;
+            ++container.misses;
+            if (totalScore < 0) {
+              totalScore = 0;
             }
           }
           items.splice(items.indexOf(item),1);
@@ -180,6 +183,7 @@ function main() {
       });
       if ((item.y+itemHeight) >= canvas.height) {
         items.splice(items.indexOf(item),1);
+        totalScore -= 100;
       }
     });
   };
@@ -205,7 +209,6 @@ function main() {
       }
       item.y += 0.5;
     });
-    totalScore = containers[0].score + containers[1].score + containers[2].score;
   };
  
   var render = function () {
