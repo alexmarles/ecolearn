@@ -34,8 +34,19 @@ function main() {
     this.image = new Image();
     this.image.src = "images/poke"+this.type+".png";
     this.picked = false;
+    this.speed = 50;
     this.rotation = 0;
   }
+
+  Item.prototype.rotate = function() {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.translate(this.width / 2, this.height / 2);
+    ctx.rotate(this.rotation * (Math.PI / 180));
+    ctx.translate(-this.width / 2, -this.height / 2);
+    ctx.drawImage(this.image, 0, 0, this.width, this.height);
+    ctx.restore();
+  };
 
   function Container(type) {
     this.x = 0;
@@ -210,8 +221,11 @@ function main() {
     items.forEach( function(item) {
       if (item.picked) {
         itemsToMove.push(item);
+        item.speed = 0;
+      } else {
+        item.speed = speed;
       }
-      item.y += speed * modifier;
+      item.y += item.speed * modifier;
       if (!item.picked) {
         item.rotation += 100 * modifier;
       }
@@ -228,13 +242,15 @@ function main() {
     ctx.shadowOffsetY = 2;
 
     items.forEach( function(item) {
-      ctx.save();
-      ctx.translate(item.x, item.y);
-      ctx.translate(itemWidth / 2, itemHeight / 2);
-      ctx.rotate(item.rotation * (Math.PI / 180));
-      ctx.translate(-itemWidth / 2, -itemHeight / 2);
-      ctx.drawImage(item.image, 0, 0, item.width, item.height);
-      ctx.restore();
+      if (navigator.isCocoonJS) {
+        ctx.beginPath();
+        ctx.arc(item.x+(item.width/2)+1, item.y+(item.height/2)+1, item.height/2, 0, 2*Math.PI);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.fill(),
+        ctx.stroke();
+      }
+      item.rotate();
     });
     
     ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
