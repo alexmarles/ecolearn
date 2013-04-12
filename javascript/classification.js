@@ -208,7 +208,7 @@ function main() {
       if (item.picked) {
         itemsToMove.push(item);
       }
-      item.y += 0.5;
+      item.y += speed;
     });
   };
  
