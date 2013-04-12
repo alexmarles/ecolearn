@@ -108,8 +108,8 @@ function main() {
     if (pointerActive) {
       pointer = getMousePos(e);
       itemsToMove.forEach(function(iTM) {
-        iTM.x = pointer.x;
-        iTM.y = pointer.y;
+        iTM.x = pointer.x-(iTM.width/2);
+        iTM.y = pointer.y-(iTM.height/2);
       });
     }
   }, false);
@@ -141,8 +141,8 @@ function main() {
     if (pointerActive) {
       pointer = getTouchPos(e);
       itemsToMove.forEach(function(iTM) {
-        iTM.x = pointer.x;
-        iTM.y = pointer.y;
+        iTM.x = pointer.x-(iTM.width/2);
+        iTM.y = pointer.y-(iTM.height/2);
       });
     }
   }, false);
@@ -223,7 +223,7 @@ function main() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.shadowColor = 'black';
-    ctx.shadowBlur = 5;
+    ctx.shadowBlur = 1;
     ctx.shadowOffsetX = 2;
     ctx.shadowOffsetY = 2;
 
