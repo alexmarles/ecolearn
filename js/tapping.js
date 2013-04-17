@@ -1,7 +1,9 @@
-function draw() {
+function main() {
 
   // Creating canvas
-  var canvas = document.getElementById("game");
+  var canvas = document.createElement(navigator.isCocoonJS ? 'screencanvas' : 'canvas');
+  canvas.id = 'game';
+  document.body.appendChild(canvas);
   var ctx = canvas.getContext("2d");
   canvas.width = 360;
   canvas.height = 640;
@@ -9,72 +11,17 @@ function draw() {
   // ------------------------------
   // CONSTANTS
   // ------------------------------
-  var itemRadius = 50;
+  var frequency = 2;
 
   // ------------------------------
   // OBJECTS
   // ------------------------------
-  var timer = {
-    time: 0
-  }
-
   var pointer = {
     x: 0,
     y: 0,
-    radius: 1
+    width: 1,
+    height: 1
   };
-
-  var item0 = {
-    radius: itemRadius,
-    type: 0,
-    x: 0,
-    y: 0,
-    active: false,
-    birthTime: 0,
-    deathTime: 0
-  };
-
-  var item1 = {
-    radius: itemRadius,
-    type: 0,
-    x: 0,
-    y: 0,
-    active: false,
-    birthTime: 0,
-    deathTime: 0
-  };
-
-  var item2 = {
-    radius: itemRadius,
-    type: 0,
-    x: 0,
-    y: 0,
-    active: false,
-    birthTime: 0,
-    deathTime: 0
-  };
-
-  var item3 = {
-    radius: itemRadius,
-    type: 0,
-    x: 0,
-    y: 0,
-    active: false,
-    birthTime: 0,
-    deathTime: 0
-  };
-
-  var item4 = {
-    radius: itemRadius,
-    type: 0,
-    x: 0,
-    y: 0,
-    active: false,
-    birthTime: 0,
-    deathTime: 0
-  };
-
-  var items = [item0, item1, item2, item3, item4];
 
   // ------------------------------
   // VARIABLES
@@ -90,16 +37,13 @@ function draw() {
   // Mouse controls
   var getMousePos = function (e) {
     var rect = canvas.getBoundingClientRect();
-    return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-      radius: 1
-    };
+    pointer.x = e.clientX - rect.left;
+    pointer.y = e.clientY - rect.top;
   };
 
   addEventListener("mousedown", function (e) {
     pointerActive = true;
-    pointer = getMousePos(e);
+    getMousePos(e);
   }, false);
 
   addEventListener("mouseup", function (e) {
@@ -108,16 +52,13 @@ function draw() {
 
   // Touch controls
   var getTouchPos = function (e) {
-    return {
-      x: e.targetTouches[0].pageX,
-      y: e.targetTouches[0].pageY,
-      radius: 1
-    };
+    pointer.x = e.targetTouches[0].pageX;
+    pointer.y = e.targetTouches[0].pageY;
   };
 
   addEventListener("touchstart", function (e) {
     pointerActive = true;
-    pointer = getTouchPos(e);
+    getTouchPos(e);
   }, false);
 
   addEventListener("touchend", function (e) {
@@ -127,24 +68,18 @@ function draw() {
   // ------------------------------
   // FUNCTIONS
   // ------------------------------
-
-  // Distance
-  var distance = function (a, b) {
-    return Math.sqrt((b.x - a.x)*(b.x - a .x) + (b.y - a.y)*(b.y - a.y));
-  };
-
-  // Check collision
-  var collides = function (a, b) {
-    return distance(a,b) < a.radius + b.radius;
+  var addNewItem = function () {
+    var item = new Item(canvas, 0, 0);
+    item.y = random(canvas.height - item.width);
+    item.born = timer.time;
+    items.push(item);
   };
 
   var handleCollisions = function () {
     if (pointerActive) {
       items.forEach(function(item) {
         if (collides(item, pointer)) {
-          item.active = false;
           pointerActive = false;
-          item.deathTime = timer.time;
           switch(item.type)
           {
             case 0:
@@ -160,65 +95,37 @@ function draw() {
           if (totalScore < 0) {
             totalScore = 0;
           }
+          items.splice(items.indexOf(item),1);
         }
       });
     }
   };
   
-  // Sets random position and type for an item
-  var initializeItem = function (item) {
-      item.x = parseInt(Math.random() * (canvas.width - itemRadius*2) + itemRadius);
-      item.y = parseInt(Math.random() * (canvas.height - itemRadius*2) + itemRadius);
-      item.type = 0;
-  };
-
   // UPDATE game objects
   var update = function (modifier) {
-    timer.time += modifier;
+    if (timer.time - timer.lastBorn > frequency) {
+      addNewItem();
+      timer.lastBorn = timer.time;
+    }
     handleCollisions();
     items.forEach( function(item) {
-      if(!item.active) {
-        initializeItem(item);
-        if(timer.time - item.deathTime >= 3) {
-          item.active = true;
-          item.birthTime = timer.time;
-        }
-      } else {
-        if(timer.time - item.birthTime >= 2) {
-          item.type = 1;
-        }
-        if(timer.time - item.birthTime >= 4) {
-          item.type = 2;
-        }
-        if(timer.time - item.birthTime >= 5) {
-          item.active = false;
-          item.deathTime = timer.time;
-          totalScore -= 100;
-        }
+      if(timer.time - item.born >= 2) {
+        item.type = 1;
+        item.image = loadImage("images/poke1.png");
       }
+      if(timer.time - item.born >= 4) {
+        item.type = 2;
+        item.image = loadImage("images/poke2.png");
+      }
+      if(timer.time - item.born >= 5) {
+        items.splice(items.indexOf(item),1);
+        totalScore -= 100;
+      }
+      item.rotation += 100 * modifier;
     });
-    switch(parseInt(timer.time)) {
-      case 2:
-        items[0].active = true;
-        items[0].birthTime = timer.time;
-        items[1].active = true;
-        items[1].birthTime = timer.time;
-        break;
-      case 4:
-        items[2].active = true;
-        items[2].birthTime = timer.time;
-        items[3].active = true;
-        items[3].birthTime = timer.time;
-        break;
-      case 5:
-        items[4].active = true;
-        items[4].birthTime = timer.time;
-        break;
-    }
   };
 
   // RENDER game objects
- 
   var render = function () {
     ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -229,26 +136,15 @@ function draw() {
     ctx.shadowOffsetY = 2;
 
     items.forEach( function(item) {
-      if(item.active) {
+      if (navigator.isCocoonJS) {
         ctx.beginPath();
-        ctx.arc(item.x,item.y,item.radius,0,2*Math.PI);
-        switch(item.type) {
-          case 0:
-            ctx.fillStyle = "green";
-            ctx.strokeStyle = "green";
-            break;
-          case 1:
-            ctx.fillStyle = "yellow";
-            ctx.strokeStyle = "yellow";
-            break;
-          case 2:
-            ctx.fillStyle = "red";
-            ctx.strokeStyle = "red";
-            break;
-        }
-        ctx.fill();
+        ctx.arc(item.x+(item.width/2)+1, item.y+(item.height/2)+1, item.height/2, 0, 2*Math.PI);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.fill(),
         ctx.stroke();
       }
+      item.rotate(ctx);
     });
 
     ctx.shadowColor = 'white';
@@ -261,7 +157,8 @@ function draw() {
     ctx.textBaseline = "top";
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     ctx.fillText("SCORE: " + totalScore, 5, 5);
-    ctx.fillText("TIME: " + parseInt(timer.time), 250, 5);
+    ctx.textAlign = "right";
+    ctx.fillText("TIME: " + parseInt(timer.time), 355, 5);
   };
 
   // Request Animation Frame for loop
@@ -276,22 +173,19 @@ function draw() {
 
   // Main program
 
-  var main = function () {
+  var loop = function () {
     var now = Date.now();
     var delta = now - then;
+    timer.time += (delta/1000);
 
     update(delta/1000);
     render();
 
     then = now;
     
-    requestAnimFrame(main);
+    requestAnimFrame(loop);
   };
 
-  items.forEach( function(item) {
-    initializeItem(item);
-  });
-
   var then = Date.now();
-  main();
+  loop();
 }

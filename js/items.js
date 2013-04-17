@@ -1,0 +1,24 @@
+function Item(canvas, type, speed) {
+  this.type = type;
+  this.image = loadImage("images/poke"+this.type+".png");
+  this.width = this.image.naturalWidth;
+  this.height = this.image.naturalHeight;
+  this.x = random(canvas.width - this.width);
+  this.y = this.height;
+  this.picked = false;
+  this.born = 0;
+  this.speed = speed;
+  this.rotation = 0;
+};
+
+Item.prototype.rotate = function(ctx) {
+  ctx.save();
+  ctx.translate(this.x, this.y);
+  ctx.translate(this.width / 2, this.height / 2);
+  ctx.rotate(this.rotation * (Math.PI / 180));
+  ctx.translate(-this.width / 2, -this.height / 2);
+  ctx.drawImage(this.image, 0, 0, this.width, this.height);
+  ctx.restore();
+};
+
+var items = [];
