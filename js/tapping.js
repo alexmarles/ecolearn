@@ -12,6 +12,8 @@ function main() {
   // CONSTANTS
   // ------------------------------
   var frequency = 2;
+ 
+  var itemWidth = 70;
 
   // ------------------------------
   // OBJECTS
@@ -29,6 +31,10 @@ function main() {
 
   var totalScore = 0;
   var pointerActive = false;
+  var itemData = {
+    images: [],
+    sizes: [itemWidth, itemWidth, itemWidth]
+  };
 
   // ------------------------------
   // CONTROLS
@@ -69,7 +75,7 @@ function main() {
   // FUNCTIONS
   // ------------------------------
   var addNewItem = function () {
-    var item = new Item(canvas, 0, 0);
+    var item = new Item(canvas, 0, 0, itemData);
     item.y = random(canvas.height - item.width);
     item.born = timer.time;
     items.push(item);
@@ -110,12 +116,10 @@ function main() {
     handleCollisions();
     items.forEach( function(item) {
       if(timer.time - item.born >= 2) {
-        item.type = 1;
-        item.image = loadImage("images/poke1.png");
+        item.changeType(1);
       }
       if(timer.time - item.born >= 4) {
-        item.type = 2;
-        item.image = loadImage("images/poke2.png");
+        item.changeType(2);
       }
       if(timer.time - item.born >= 5) {
         items.splice(items.indexOf(item),1);
@@ -187,5 +191,13 @@ function main() {
   };
 
   var then = Date.now();
-  loop();
+
+  loadImages([
+      "images/poke0.png",
+      "images/poke1.png",
+      "images/poke2.png"
+  ], function (loadedImages) {
+    itemData.images = loadedImages;
+    loop();
+  });
 }
