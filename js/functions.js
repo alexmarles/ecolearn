@@ -1,8 +1,27 @@
 // Load image
-var loadImage = function (name) {
+var loadImages = function (names, callback) {
+  var i, l, images = [], intervalId;
+
+  for (i = 0, l = names.length; i < l; i += 1) {
+    loadImage(names[i], function (image) {
+      images.push(image);
+    });
+  }
+
+  intervalId = setInterval(function () {
+    if (images.length === names.length) {
+      clearInterval(intervalId);
+      callback(images);
+    }
+  }, 0);
+};
+
+var loadImage = function (name, callback) {
   var image = new Image();
   image.src = name;
-  return image;
+  image.addEventListener("load", function () {
+      callback(image);
+  });
 };
 
 // Returns a random number between 0 and limit-1

@@ -11,6 +11,7 @@ function main() {
   // ------------------------------
   // CONSTANTS
   // ------------------------------
+  var itemWidth = 40;
   var containerWidth = 75;
   var containerHeight = 35;
 
@@ -51,6 +52,10 @@ function main() {
 
   var itemsToMove = [];
   var containers = [new Container(0), new Container(1), new Container(2)];
+  var itemData = {
+    images: [],
+    sizes: [itemWidth, itemWidth, itemWidth]
+  };
 
   // ------------------------------
   // CONTROLS
@@ -163,7 +168,7 @@ function main() {
   // Update game objects
   var update = function (modifier) {
     if (timer.time - timer.lastBorn > frequency) {
-      items.push(new Item(canvas, random(3), speed));
+      items.push(new Item(canvas, random(3), speed, itemData));
       timer.lastBorn = timer.time;
     }
     handleCollisions();
@@ -257,5 +262,12 @@ function main() {
   containers[2].y = canvas.height - (containerHeight + 10);
 
   var then = Date.now();
-  loop();
+  loadImages([
+      "images/poke0.png",
+      "images/poke1.png",
+      "images/poke2.png"
+  ], function (loadedImages) {
+    itemData.images = loadedImages;
+    loop();
+  });
 }
