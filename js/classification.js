@@ -21,29 +21,6 @@ function main() {
   // CLASSES
   // ------------------------------
 
-  function Item() {
-    this.type = parseInt(Math.random() * 3);
-    this.image = loadImage("images/poke"+this.type+".png");
-    //TODO: get width and height from image
-    this.width = 40;
-    this.height = 40;
-    this.x = parseInt(Math.random() * (canvas.width - this.width));
-    this.y = this.height;
-    this.picked = false;
-    this.speed = speed;
-    this.rotation = 0;
-  };
-
-  Item.prototype.rotate = function() {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    ctx.translate(this.width / 2, this.height / 2);
-    ctx.rotate(this.rotation * (Math.PI / 180));
-    ctx.translate(-this.width / 2, -this.height / 2);
-    ctx.drawImage(this.image, 0, 0, this.width, this.height);
-    ctx.restore();
-  };
-
   function Container(type) {
     this.x = 0;
     this.y = 0;
@@ -57,23 +34,12 @@ function main() {
   // ------------------------------
   // OBJECTS
   // ------------------------------
-  var timer = {
-    time: 0,
-    lastWave: 0
-  }
-
   var pointer = {
     x: 0,
     y: 0,
     width: 1,
     height: 1
   };
-
-
-  var items = [];
-  var itemsToMove = [];
-
-  var containers = [new Container(0), new Container(1), new Container(2)];
 
   // ------------------------------
   // VARIABLES
@@ -82,6 +48,9 @@ function main() {
   var totalScore = 0;
   var pointerActive = false;
   var hasObject = false;
+
+  var itemsToMove = [];
+  var containers = [new Container(0), new Container(1), new Container(2)];
 
   // ------------------------------
   // CONTROLS
@@ -158,21 +127,6 @@ function main() {
   // FUNCTIONS
   // ------------------------------
 
-  // Load image
-  var loadImage = function (name) {
-    var image = new Image();
-    image.src = name;
-    return image;
-  };
-
-  // Check collision
-  var collides = function (a, b) {
-    return a.x < b.x + b.width &&
-           a.x + a.width > b.x &&
-           a.y < b.y + b.height &&
-           a.y + a.height > b.y;
-  };
-
   var handleCollisions = function () {
     if (pointerActive) {
       items.forEach(function(item) {
@@ -208,9 +162,9 @@ function main() {
 
   // Update game objects
   var update = function (modifier) {
-    if (timer.time - timer.lastWave > frequency) {
-      items.push(new Item());
-      timer.lastWave = timer.time;
+    if (timer.time - timer.lastBorn > frequency) {
+      items.push(new Item(canvas, speed));
+      timer.lastBorn = timer.time;
     }
     handleCollisions();
     itemsToMove = [];
@@ -246,7 +200,7 @@ function main() {
         ctx.fill(),
         ctx.stroke();
       }
-      item.rotate();
+      item.rotate(ctx);
     });
     
     ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
