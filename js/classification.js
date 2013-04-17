@@ -163,7 +163,7 @@ function main() {
   // Update game objects
   var update = function (modifier) {
     if (timer.time - timer.lastBorn > frequency) {
-      items.push(new Item(canvas, speed));
+      items.push(new Item(canvas, random(3), speed));
       timer.lastBorn = timer.time;
     }
     handleCollisions();
@@ -182,6 +182,7 @@ function main() {
     });
   };
  
+  // RENDER game objects
   var render = function () {
     ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);

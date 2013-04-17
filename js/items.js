@@ -1,11 +1,12 @@
-function Item(canvas, speed) {
-  this.type = parseInt(Math.random() * 3);
+function Item(canvas, type, speed) {
+  this.type = type;
   this.image = loadImage("images/poke"+this.type+".png");
   this.width = this.image.naturalWidth;
   this.height = this.image.naturalHeight;
-  this.x = parseInt(Math.random() * (canvas.width - this.width));
+  this.x = random(canvas.width - this.width);
   this.y = this.height;
   this.picked = false;
+  this.born = 0;
   this.speed = speed;
   this.rotation = 0;
 };
