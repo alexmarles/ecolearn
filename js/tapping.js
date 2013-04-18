@@ -102,9 +102,6 @@ function main() {
               totalScore += 50;
               break;
           }
-          if (totalScore < 0) {
-            totalScore = 0;
-          }
           items.splice(items.indexOf(item),1);
         }
       });
@@ -128,6 +125,9 @@ function main() {
       if(timer.time - item.born >= 5) {
         items.splice(items.indexOf(item),1);
         totalScore -= 100;
+        if (totalScore < 0) {
+          totalScore = 0;
+        }
       }
       item.rotation += 100 * modifier;
     });
