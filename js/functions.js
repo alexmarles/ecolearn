@@ -1,11 +1,16 @@
 // Load image
 var loadImages = function (names, callback) {
-  var i, l, images = [], intervalId;
+  var images = {}, intervalId, id;
 
-  for (i = 0, l = names.length; i < l; i += 1) {
-    loadImage(names[i], function (image) {
-      images.push(image);
-    });
+  // Iterate through object properties
+  for (id in names) {
+      if(names.hasOwnProperty(id)) {
+        (function (id) {
+          loadImage(names[id], function (image) {
+            images[id] = image;
+          });
+        }(id));
+      }
   }
 
   intervalId = setInterval(function () {

@@ -33,7 +33,11 @@ function main() {
   var pointerActive = false;
   var itemData = {
     images: [],
-    sizes: [itemWidth, itemWidth, itemWidth]
+    sizes: {
+      poke0: itemWidth,
+      poke1: itemWidth,
+      poke2: itemWidth
+    }
   };
 
   // ------------------------------
@@ -192,10 +196,10 @@ function main() {
 
   var then = Date.now();
 
-  loadImages([
-      "images/poke0.png",
-      "images/poke1.png",
-      "images/poke2.png"
+  loadImages({
+      poke0: "images/poke0.png",
+      poke1: "images/poke1.png",
+      poke2: "images/poke2.png"
   ], function (loadedImages) {
     itemData.images = loadedImages;
     loop();
