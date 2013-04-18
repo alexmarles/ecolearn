@@ -21,6 +21,7 @@ Item.prototype.changeType = function(type) {
 
   this.width = this.image.width;
   this.height = this.image.height;
+  this.rotation += 10;
 };
 
 Item.prototype.rotate = function(ctx) {
