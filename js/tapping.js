@@ -200,7 +200,7 @@ function main() {
       poke0: "images/poke0.png",
       poke1: "images/poke1.png",
       poke2: "images/poke2.png"
-  ], function (loadedImages) {
+  }, function (loadedImages) {
     itemData.images = loadedImages;
     loop();
   });
