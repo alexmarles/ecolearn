@@ -13,11 +13,11 @@ function Item(canvas, type, speed, data) {
 
 Item.prototype.changeType = function(type) {
   this.type = type;
-  this.image = this.data.images[this.type];
+  this.image = this.data.images["poke" + this.type];
 
   var ratio = this.image.width / this.image.height;
-  this.image.width = this.data.sizes[this.type];
-  this.image.height = this.data.sizes[this.type] / ratio;
+  this.image.width = this.data.sizes["poke" + this.type];
+  this.image.height = this.data.sizes["poke" + this.type] / ratio;
 
   this.width = this.image.width;
   this.height = this.image.height;

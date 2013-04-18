@@ -53,8 +53,12 @@ function main() {
   var itemsToMove = [];
   var containers = [new Container(0), new Container(1), new Container(2)];
   var itemData = {
-    images: [],
-    sizes: [itemWidth, itemWidth, itemWidth]
+    images: {},
+    sizes: {
+      poke0: itemWidth,
+      poke1: itemWidth,
+      poke2: itemWidth
+    }
   };
 
   // ------------------------------
@@ -262,11 +266,11 @@ function main() {
   containers[2].y = canvas.height - (containerHeight + 10);
 
   var then = Date.now();
-  loadImages([
-      "images/poke0.png",
-      "images/poke1.png",
-      "images/poke2.png"
-  ], function (loadedImages) {
+  loadImages({
+      poke0: "images/poke0.png",
+      poke1: "images/poke1.png",
+      poke2: "images/poke2.png"
+  }, function (loadedImages) {
     itemData.images = loadedImages;
     loop();
   });
