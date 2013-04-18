@@ -13,7 +13,7 @@ function main() {
   // ------------------------------
   var frequency = 2;
  
-  var itemWidth = 70;
+  var itemWidth = 100;
 
   // ------------------------------
   // OBJECTS
