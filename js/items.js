@@ -12,12 +12,15 @@ function Item(canvas, type, speed, data) {
 };
 
 Item.prototype.changeType = function(type) {
-  this.type = type;
-  this.image = this.data.images["item" + this.type];
+  if (type > 2)
+    this.type = type - 3;
+  else
+    this.type = type;
+  this.image = this.data.images["item" + type];
 
   var ratio = this.image.width / this.image.height;
-  this.image.width = this.data.sizes["item" + this.type];
-  this.image.height = this.data.sizes["item" + this.type] / ratio;
+  this.image.width = this.data.sizes["item" + type];
+  this.image.height = this.data.sizes["item" + type] / ratio;
 
   this.width = this.image.width;
   this.height = this.image.height;

@@ -151,7 +151,7 @@ function main() {
     items.forEach(function(item) {
       containers.forEach(function(container) {
         if (collides(item, container)) {
-          if (item.type === container.type || item.type === container.type+3) {
+          if (item.type === container.type) {
             totalScore += 50;
             ++container.hits;
           } else {
