@@ -11,9 +11,9 @@ function main() {
   // ------------------------------
   // CONSTANTS
   // ------------------------------
-  var itemWidth = 40;
-  var containerWidth = 75;
-  var containerHeight = 35;
+  var itemWidth = 80;
+  var containerWidth = 110;
+  var containerHeight = 75;
 
   var frequency = 2;
   var speed = 50;
