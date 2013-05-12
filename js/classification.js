@@ -55,9 +55,11 @@ function main() {
   var itemData = {
     images: {},
     sizes: {
-      poke0: itemWidth,
-      poke1: itemWidth,
-      poke2: itemWidth
+      item0: itemWidth,
+      item1: itemWidth,
+      item2: itemWidth,
+      item3: itemWidth,
+      item4: itemWidth
     }
   };
 
@@ -149,7 +151,7 @@ function main() {
     items.forEach(function(item) {
       containers.forEach(function(container) {
         if (collides(item, container)) {
-          if (item.type === container.type) {
+          if (item.type === container.type || item.type === container.type+3) {
             totalScore += 50;
             ++container.hits;
           } else {
@@ -172,7 +174,7 @@ function main() {
   // Update game objects
   var update = function (modifier) {
     if (timer.time - timer.lastBorn > frequency) {
-      items.push(new Item(canvas, random(3), speed, itemData));
+      items.push(new Item(canvas, random(5), speed, itemData));
       timer.lastBorn = timer.time;
     }
     handleCollisions();
@@ -186,7 +188,7 @@ function main() {
       }
       item.y += item.speed * modifier;
       if (!item.picked) {
-        item.rotation += 100 * modifier;
+        item.rotation += 50 * modifier;
       }
     });
   };
@@ -213,7 +215,7 @@ function main() {
       item.rotate(ctx);
     });
     
-    ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+    ctx.fillStyle = "rgba(255, 255, 0, 0.5)";
     ctx.fillRect(containers[0].x, containers[0].y-containerHeight, containers[0].width, containers[0].height+containerHeight);
     ctx.fillStyle = "rgba(0, 0, 255, 0.5)";
     ctx.fillRect(containers[1].x, containers[1].y-containerHeight, containers[1].width, containers[1].height+containerHeight);
@@ -267,9 +269,11 @@ function main() {
 
   var then = Date.now();
   loadImages({
-      poke0: "images/poke0.png",
-      poke1: "images/poke1.png",
-      poke2: "images/poke2.png"
+      item0: "images/tetra.png",
+      item1: "images/box.png",
+      item2: "images/bottle.png",
+      item3: "images/can.png",
+      item4: "images/paper.png"
   }, function (loadedImages) {
     itemData.images = loadedImages;
     loop();
