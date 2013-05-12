@@ -204,14 +204,6 @@ function main() {
     ctx.shadowOffsetY = 2;
 
     items.forEach( function(item) {
-      if (navigator.isCocoonJS) {
-        ctx.beginPath();
-        ctx.arc(item.x+(item.width/2)+1, item.y+(item.height/2)+1, item.height/2, 0, 2*Math.PI);
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
-        ctx.fill(),
-        ctx.stroke();
-      }
       item.rotate(ctx);
     });
     
