@@ -35,19 +35,13 @@ function classification() {
   // ------------------------------
   // OBJECTS
   // ------------------------------
-  var pointer = {
-    x: 0,
-    y: 0,
-    width: 1,
-    height: 1
-  };
+  var pointer = new Pointer(canvas);
 
   // ------------------------------
   // VARIABLES
   // ------------------------------
 
   var totalScore = 0;
-  var pointerActive = false;
   var hasObject = false;
 
   var itemsToMove = [];
@@ -79,12 +73,12 @@ function classification() {
   };
 
   addEventListener("mousedown", function (e) {
-    pointerActive = true;
-    pointer = getMousePos(e);
+    pointer.active = true;
+    pointer.getMousePos(e);
   }, false);
 
   addEventListener("mouseup", function (e) {
-    pointerActive = false;
+    pointer.active = false;
     hasObject = false;
     items.forEach(function(item) {
       item.picked = false;
@@ -92,8 +86,8 @@ function classification() {
   }, false);
   
   addEventListener("mousemove", function (e) {
-    if (pointerActive) {
-      pointer = getMousePos(e);
+    if (pointer.active) {
+      pointer.getMousePos(e);
       itemsToMove.forEach(function(iTM) {
         iTM.x = pointer.x-(iTM.width/2);
         iTM.y = pointer.y-(iTM.height/2);
@@ -112,12 +106,12 @@ function classification() {
   };
 
   addEventListener("touchstart", function (e) {
-    pointerActive = true;
-    pointer = getTouchPos(e);
+    pointer.active = true;
+    pointer.getTouchPos(e);
   }, false);
 
   addEventListener("touchend", function (e) {
-    pointerActive = false;
+    pointer.active = false;
     hasObject = false;
     items.forEach(function(item) {
       item.picked = false;
@@ -125,8 +119,8 @@ function classification() {
   }, false);
 
   addEventListener("touchmove", function (e) {
-    if (pointerActive) {
-      pointer = getTouchPos(e);
+    if (pointer.active) {
+      pointer.getTouchPos(e);
       itemsToMove.forEach(function(iTM) {
         iTM.x = pointer.x-(iTM.width/2);
         iTM.y = pointer.y-(iTM.height/2);
@@ -139,7 +133,7 @@ function classification() {
   // ------------------------------
 
   var handleCollisions = function () {
-    if (pointerActive) {
+    if (pointer.active) {
       items.forEach(function(item) {
         if (collides(item, pointer) && !hasObject) {
           item.picked = true;

@@ -17,7 +17,7 @@ Pointer.prototype.getMousePos = function (e) {
   this.y = e.clientY - rect.top;
 };
 
-Pointer.prototyp.getTouchPos = function (e) {
+Pointer.prototype.getTouchPos = function (e) {
   this.x = e.targetTouches[0].pageX;
   this.y = e.targetTouches[0].pageY;
 };
