@@ -9,7 +9,7 @@ function main() {
   canvas.height = 640;
 
   // CONSTANTS
-  var pointerActive = false;
+  var pointer = new Pointer(canvas);
 
   // OBJECTS
   var runClassification = function () { return true; };
@@ -18,22 +18,28 @@ function main() {
   buttons.push(new Button(80, 200, 200, 100, "rgba(0, 0, 255, 1)", "Classification", runClassification()));
   buttons.push(new Button(80, 350, 200, 100, "rgba(0, 0, 255, 1)", "Tapping", runTapping()));
 
-  var getTouchPos = function (e) {
-    return {
-      x: e.targetTouches[0].pageX,
-      y: e.targetTouches[0].pageY,
-      width: 1,
-      height: 1
-    };
-  };
+  // ------------------------------
+  // CONTROLS
+  // ------------------------------
 
+  // Mouse Controls
+  addEventListener("mousedown", function (e) {
+    pointer.active = true;
+    pointer.getMousePos(e);
+  }, false);
+
+  addEventListener("mouseup", function (e) {
+    pointer.active = false;
+  }, false);
+
+  // Touch Controls
   addEventListener("touchstart", function (e) {
-    pointerActive = true;
-    pointer = getTouchPos(e);
+    pointer.active = true;
+    pointer.getTouchPos(e);
   }, false);
 
   addEventListener("touchend", function (e) {
-    pointerActive = false;
+    pointer.active = false;
   }, false);
 
   // ------------------------------
@@ -41,10 +47,10 @@ function main() {
   // ------------------------------
 
   var handleCollisions = function () {
-    if (pointerActive) {
+    if (pointer.active) {
       buttons.forEach(function(button) {
         if (collides(button, pointer)) {
-          console.log(button.text);
+          classification(canvas, ctx);
         }
       });
     }

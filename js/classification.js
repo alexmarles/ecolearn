@@ -1,12 +1,4 @@
-function classification() {
-
-  // Creating canvas
-  var canvas = document.createElement(navigator.isCocoonJS ? 'screencanvas' : 'canvas');
-  canvas.id = 'game';
-  document.body.appendChild(canvas);
-  var ctx = canvas.getContext("2d");
-  canvas.width = 360;
-  canvas.height = 640;
+function classification(canvas, ctx) {
 
   // ------------------------------
   // CONSTANTS
@@ -32,9 +24,7 @@ function classification() {
     this.misses = 0;
   }
 
-  // ------------------------------
-  // OBJECTS
-  // ------------------------------
+  // CONSTANTS
   var pointer = new Pointer(canvas);
 
   // ------------------------------
@@ -62,16 +52,6 @@ function classification() {
   // ------------------------------
 
   // Mouse controls
-  var getMousePos = function (e) {
-    var rect = canvas.getBoundingClientRect();
-    return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-      width: 1,
-      height: 1
-    };
-  };
-
   addEventListener("mousedown", function (e) {
     pointer.active = true;
     pointer.getMousePos(e);
@@ -96,15 +76,6 @@ function classification() {
   }, false);
 
   // Touch controls
-  var getTouchPos = function (e) {
-    return {
-      x: e.targetTouches[0].pageX,
-      y: e.targetTouches[0].pageY,
-      width: 1,
-      height: 1
-    };
-  };
-
   addEventListener("touchstart", function (e) {
     pointer.active = true;
     pointer.getTouchPos(e);
@@ -233,7 +204,7 @@ function classification() {
   })();
 
   // Loop
-  var loopClas = function () {
+  var loop = function () {
     var now = Date.now();
     var delta = now - then;
     timer.time += (delta/1000);
@@ -243,7 +214,7 @@ function classification() {
 
     then = now;
 
-    requestAnimFrame(loopClas);
+    requestAnimFrame(loop);
   };
 
   containers[0].x = (canvas.width/6)*1 - (containerWidth/2);
@@ -262,6 +233,6 @@ function classification() {
       item4: "images/paper.png"
   }, function (loadedImages) {
     itemData.images = loadedImages;
-    loopClas();
+    loop();
   });
 }
