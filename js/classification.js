@@ -1,4 +1,4 @@
-function main() {
+function classification() {
 
   // Creating canvas
   var canvas = document.createElement(navigator.isCocoonJS ? 'screencanvas' : 'canvas');
@@ -239,7 +239,7 @@ function main() {
   })();
 
   // Loop
-  var loop = function () {
+  var loopClas = function () {
     var now = Date.now();
     var delta = now - then;
     timer.time += (delta/1000);
@@ -249,7 +249,7 @@ function main() {
 
     then = now;
 
-    requestAnimFrame(loop);
+    requestAnimFrame(loopClas);
   };
 
   containers[0].x = (canvas.width/6)*1 - (containerWidth/2);
@@ -268,6 +268,6 @@ function main() {
       item4: "images/paper.png"
   }, function (loadedImages) {
     itemData.images = loadedImages;
-    loop();
+    loopClas();
   });
 }

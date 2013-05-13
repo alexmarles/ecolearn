@@ -1,4 +1,4 @@
-function main() {
+function tapping() {
 
   // Creating canvas
   var canvas = document.createElement(navigator.isCocoonJS ? 'screencanvas' : 'canvas');
@@ -181,7 +181,7 @@ function main() {
 
   // Main program
 
-  var loop = function () {
+  var loopTap = function () {
     var now = Date.now();
     var delta = now - then;
     timer.time += (delta/1000);
@@ -191,7 +191,7 @@ function main() {
 
     then = now;
     
-    requestAnimFrame(loop);
+    requestAnimFrame(loopTap);
   };
 
   var then = Date.now();
@@ -202,6 +202,6 @@ function main() {
       poke2: "images/poke2.png"
   }, function (loadedImages) {
     itemData.images = loadedImages;
-    loop();
+    loopTap();
   });
 }
