@@ -1,6 +1,12 @@
-function Timer() {
-  this.time = 0,
-  this.lastBorn = 0
-}
+define(function (require) {
 
-var timer = new Timer();
+  var Timer = {};
+
+  Timer = function () {
+    this.time = 0,
+    this.lastBorn = 0
+  }
+
+  return new Timer();
+
+});

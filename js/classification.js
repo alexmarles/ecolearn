@@ -1,155 +1,112 @@
-function classification(canvas, ctx) {
+define(function (require) {
 
-  // ------------------------------
-  // CONSTANTS
-  // ------------------------------
-  var itemWidth = 80;
-  var containerWidth = 110;
-  var containerHeight = 75;
+  var pointer         = require('pointer'),
+      timer           = require('timer'),
+      constants       = require('constants'),
+      Container       = require('container'),
+      Item            = require('item'),
+      Classification  = {};
 
-  var frequency = 2;
-  var speed = 50;
-
-  // ------------------------------
-  // CLASSES
-  // ------------------------------
-
-  function Container(type) {
-    this.x = 0;
-    this.y = 0;
-    this.type = type;
-    this.width = containerWidth;
-    this.height = containerHeight;
-    this.hits = 0;
-    this.misses = 0;
-  }
-
-  // CONSTANTS
-  var pointer = new Pointer(canvas);
-
-  // ------------------------------
-  // VARIABLES
-  // ------------------------------
-
-  var totalScore = 0;
-  var hasObject = false;
-
-  var itemsToMove = [];
-  var containers = [new Container(0), new Container(1), new Container(2)];
-  var itemData = {
-    images: {},
-    sizes: {
-      item0: itemWidth,
-      item1: itemWidth,
-      item2: itemWidth,
-      item3: itemWidth,
-      item4: itemWidth
-    }
+  Classification = function () {
+    this.totalScore   = 0;
+    this.hasObject    = false;
+    this.containers   = [new Container(0), new Container(1), new Container(2)];
+    this.items        = [];
+    this.itemsToMove  = [];
+    this.itemData     = {
+                          images: {},
+                          sizes: {
+                            item0: constants.itemWidth,
+                            item1: constants.itemWidth,
+                            item2: constants.itemWidth,
+                            item3: constants.itemWidth,
+                            item4: constants.itemWidth
+                          }
+                        };
   };
 
-  // ------------------------------
-  // CONTROLS
-  // ------------------------------
+  Classification.init(canvas, ctx) {
 
-  // Mouse controls
-  addEventListener("mousedown", function (e) {
-    pointer.active = true;
-    pointer.getMousePos(e);
-  }, false);
-
-  addEventListener("mouseup", function (e) {
-    pointer.active = false;
-    hasObject = false;
-    items.forEach(function(item) {
-      item.picked = false;
+    this.containers.forEach( function (container) {
+      container.init();
     });
-  }, false);
-  
-  addEventListener("mousemove", function (e) {
-    if (pointer.active) {
-      pointer.getMousePos(e);
-      itemsToMove.forEach(function(iTM) {
-        iTM.x = pointer.x-(iTM.width/2);
-        iTM.y = pointer.y-(iTM.height/2);
-      });
-    }
-  }, false);
 
-  // Touch controls
-  addEventListener("touchstart", function (e) {
-    pointer.active = true;
-    pointer.getTouchPos(e);
-  }, false);
-
-  addEventListener("touchend", function (e) {
-    pointer.active = false;
-    hasObject = false;
-    items.forEach(function(item) {
-      item.picked = false;
+    loadImages({
+        item0: "images/tetra.png",
+        item1: "images/box.png",
+        item2: "images/bottle.png",
+        item3: "images/can.png",
+        item4: "images/paper.png"
+    }, function (loadedImages) {
+      this.itemData.images = loadedImages;
     });
-  }, false);
-
-  addEventListener("touchmove", function (e) {
-    if (pointer.active) {
-      pointer.getTouchPos(e);
-      itemsToMove.forEach(function(iTM) {
-        iTM.x = pointer.x-(iTM.width/2);
-        iTM.y = pointer.y-(iTM.height/2);
-      });
-    }
-  }, false);
+    
+  }
 
   // ------------------------------
   // FUNCTIONS
   // ------------------------------
 
-  var handleCollisions = function () {
+  Classification.prototype.handleCollisions = function (canvas) {
     if (pointer.active) {
-      items.forEach(function(item) {
-        if (collides(item, pointer) && !hasObject) {
+      this.items.forEach(function(item) {
+        if (collides(item, pointer) && !this.hasObject) {
           item.picked = true;
-          hasObject = true;
+          this.hasObject = true;
         }
       });
     }
 
-    items.forEach(function(item) {
-      containers.forEach(function(container) {
+    this.items.forEach(function(item) {
+      this.containers.forEach(function(container) {
         if (collides(item, container)) {
           if (item.type === container.type) {
-            totalScore += 50;
+            this.totalScore += 50;
             ++container.hits;
           } else {
-            totalScore -= 100;
+            this.totalScore -= 100;
             ++container.misses;
-            if (totalScore < 0) {
-              totalScore = 0;
+            if (this.totalScore < 0) {
+              this.totalScore = 0;
             }
           }
-          items.splice(items.indexOf(item),1);
+          this.items.splice(this.items.indexOf(item),1);
         }
       });
       if ((item.y+item.height) >= canvas.height) {
-        items.splice(items.indexOf(item),1);
-        totalScore -= 100;
+        this.items.splice(this.items.indexOf(item),1);
+        this.totalScore -= 100;
       }
     });
   };
 
   // Update game objects
-  var update = function (modifier) {
-    if (timer.time - timer.lastBorn > frequency) {
-      items.push(new Item(canvas, random(5), speed, itemData));
+  Classification.prototype.update = function (modifier) {
+    if (pointer.active) {
+      this.itemsToMove.forEach(function(iTM) {
+        iTM.x = pointer.x-(iTM.width/2);
+        iTM.y = pointer.y-(iTM.height/2);
+      });
+    } else {
+      this.hasObject = false;
+      this.items.forEach(function(item) {
+        item.picked = false;
+      });
+    }
+
+    if (timer.time - timer.lastBorn > constants.frequency) {
+      this.items.push(new Item(canvas, random(5), constants.speed, this.itemData));
       timer.lastBorn = timer.time;
     }
-    handleCollisions();
-    itemsToMove = [];
-    items.forEach( function(item) {
+
+    this.handleClassificationCollisions();
+    this.itemsToMove = [];
+    this.items.forEach( function(item) {
       if (item.picked) {
-        itemsToMove.push(item);
+        this.itemsToMove.push(item);
         item.speed = 0;
       } else {
-        item.speed = speed;
+        item.speed = constants.speed;
       }
       item.y += item.speed * modifier;
       if (!item.picked) {
@@ -157,9 +114,9 @@ function classification(canvas, ctx) {
       }
     });
   };
- 
+
   // RENDER game objects
-  var render = function () {
+  Classification.prototype.render = function(canvas, ctx) {
     ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -168,16 +125,16 @@ function classification(canvas, ctx) {
     ctx.shadowOffsetX = 2;
     ctx.shadowOffsetY = 2;
 
-    items.forEach( function(item) {
+    this.items.forEach( function(item) {
       item.rotate(ctx);
     });
     
     ctx.fillStyle = "rgba(255, 255, 0, 0.5)";
-    ctx.fillRect(containers[0].x, containers[0].y-containerHeight, containers[0].width, containers[0].height+containerHeight);
+    ctx.fillRect(this.containers[0].x, this.containers[0].y-containerHeight, this.containers[0].width, this.containers[0].height+containerHeight);
     ctx.fillStyle = "rgba(0, 0, 255, 0.5)";
-    ctx.fillRect(containers[1].x, containers[1].y-containerHeight, containers[1].width, containers[1].height+containerHeight);
+    ctx.fillRect(this.containers[1].x, this.containers[1].y-containerHeight, this.containers[1].width, this.containers[1].height+containerHeight);
     ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
-    ctx.fillRect(containers[2].x, containers[2].y-containerHeight, containers[2].width, containers[2].height+containerHeight);
+    ctx.fillRect(this.containers[2].x, this.containers[2].y-containerHeight, this.containers[2].width, this.containers[2].height+containerHeight);
 
     ctx.shadowColor = 'white';
     ctx.shadowBlur = 0;
@@ -188,51 +145,9 @@ function classification(canvas, ctx) {
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-    ctx.fillText("SCORE: " + totalScore, 5, 5);
+    ctx.fillText("SCORE: " + this.totalScore, 5, 5);
     ctx.textAlign = "right";
     ctx.fillText("TIME: " + parseInt(timer.time), 355, 5);
-  };
+  }
 
-  // Request Animation Frame for loop
-  var requestAnimFrame = (function(){
-    return  window.requestAnimationFrame       ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame    ||
-    function( callback ){
-      window.setTimeout(callback, 1000 / 60);
-    };
-  })();
-
-  // Loop
-  var loop = function () {
-    var now = Date.now();
-    var delta = now - then;
-    timer.time += (delta/1000);
-
-    update(delta/1000);
-    render();
-
-    then = now;
-
-    requestAnimFrame(loop);
-  };
-
-  containers[0].x = (canvas.width/6)*1 - (containerWidth/2);
-  containers[0].y = canvas.height - (containerHeight + 10);
-  containers[1].x = (canvas.width/6)*3 - (containerWidth/2);
-  containers[1].y = canvas.height - (containerHeight + 10);
-  containers[2].x = (canvas.width/6)*5 - (containerWidth/2);
-  containers[2].y = canvas.height - (containerHeight + 10);
-
-  var then = Date.now();
-  loadImages({
-      item0: "images/tetra.png",
-      item1: "images/box.png",
-      item2: "images/bottle.png",
-      item3: "images/can.png",
-      item4: "images/paper.png"
-  }, function (loadedImages) {
-    itemData.images = loadedImages;
-    loop();
-  });
-}
+});
