@@ -9,8 +9,8 @@ define(function (require) {
 
   // INITIALIZE THE MENU OBJECTS
   Menu.prototype.init = function () {
-    buttons.push(new Button(80, 200, 200, 100, "rgba(0, 0, 255, 1)", "Classification"));
-    buttons.push(new Button(80, 350, 200, 100, "rgba(0, 0, 255, 1)", "Tapping"));
+    this.buttons.push(new Button(80, 200, 200, 100, "rgba(0, 0, 255, 1)", "Classification"));
+    this.buttons.push(new Button(80, 350, 200, 100, "rgba(0, 0, 255, 1)", "Tapping"));
   };
 
   // HANDLE COLLISIONS FOR MENU OBJECTS
@@ -22,11 +22,12 @@ define(function (require) {
         }
       });
     }
+    return 0;
   };
     
   // UPDATE MENU OBJECTS
   Menu.prototype.update = function () {
-    return handleCollisions();
+    return this.handleCollisions();
   };
 
   // RENDER MENU OBJECTS

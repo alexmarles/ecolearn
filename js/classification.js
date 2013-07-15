@@ -25,10 +25,12 @@ define(function (require) {
                         };
   };
 
-  Classification.init(canvas, ctx) {
+  Classification.prototype.init = function (canvas, ctx) {
+
+    var that = this;
 
     this.containers.forEach( function (container) {
-      container.init();
+      container.init(canvas);
     });
 
     loadImages({
@@ -38,10 +40,10 @@ define(function (require) {
         item3: "images/can.png",
         item4: "images/paper.png"
     }, function (loadedImages) {
-      this.itemData.images = loadedImages;
+      that.itemData.images = loadedImages;
     });
     
-  }
+  };
 
   // ------------------------------
   // FUNCTIONS
@@ -149,5 +151,7 @@ define(function (require) {
     ctx.textAlign = "right";
     ctx.fillText("TIME: " + parseInt(timer.time), 355, 5);
   }
+
+  return Classification;
 
 });

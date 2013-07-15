@@ -26,7 +26,7 @@ define(function (require) {
   classification = new Classification();
 
   menu.init();
-  classification.init();
+  classification.init(canvas);
 
   loop = function () {
     now = Date.now();
@@ -38,7 +38,7 @@ define(function (require) {
       option = menu.update();
       switch(option) {
         case 0:
-          menu.render();
+          menu.render(canvas, ctx);
           break;
         case 1:
           inMenu = false;
