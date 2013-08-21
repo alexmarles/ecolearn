@@ -2,30 +2,36 @@
 // CONTROLS
 // ------------------------------
 
-// MOUSE CONTROLS
-addEventListener("mousedown", function (e) {
-  window.pointer.active = true;
-  window.pointer.getMousePos(e);
-}, false);
+define(function (require) {
 
-addEventListener("mouseup", function (e) {
-  window.pointer.active = false;
-}, false);
+  var pointer = require('pointer');
 
-addEventListener("mousemove", function (e) {
-  if (window.pointer.active) {
-    window.pointer.getMousePos(e);
-  }
-}, false);
-// ------------------------------
+  // MOUSE CONTROLS
+  addEventListener("mousedown", function (e) {
+    pointer.active = true;
+    pointer.getMousePos(e);
+  }, false);
 
-// TOUCH CONTROLS
-addEventListener("touchstart", function (e) {
-  window.pointer.active = true;
-  window.pointer.getTouchPos(e);
-}, false);
+  addEventListener("mouseup", function (e) {
+    pointer.active = false;
+  }, false);
 
-addEventListener("touchend", function (e) {
-  window.pointer.active = false;
-}, false);
-// ------------------------------
+  addEventListener("mousemove", function (e) {
+    if (pointer.active) {
+      pointer.getMousePos(e);
+    }
+  }, false);
+  // ------------------------------
+
+  // TOUCH CONTROLS
+  addEventListener("touchstart", function (e) {
+    pointer.active = true;
+    pointer.getTouchPos(e);
+  }, false);
+
+  addEventListener("touchend", function (e) {
+    pointer.active = false;
+  }, false);
+  // ------------------------------
+
+});

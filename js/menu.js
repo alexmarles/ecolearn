@@ -1,7 +1,7 @@
 define(function (require) {
 
-  var Button = require('button'),
-      pointer = require('pointer');
+  var pointer   = require('pointer'),
+      Button    = require('button');
 
   var Menu = function () {
     this.buttons = [];
@@ -15,14 +15,16 @@ define(function (require) {
 
   // HANDLE COLLISIONS FOR MENU OBJECTS
   Menu.prototype.handleCollisions = function () {
+    var value = 0;
     if (pointer.active) {
       this.buttons.forEach( function (button, index) {
         if (collides(button, pointer)) {
-          return index;
+          value = index+1;
         }
       });
     }
-    return 0;
+
+    return value;
   };
     
   // UPDATE MENU OBJECTS

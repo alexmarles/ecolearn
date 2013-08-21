@@ -3,6 +3,7 @@ define(function (require) {
   var pointer         = require('pointer'),
       timer           = require('timer'),
       constants       = require('constants'),
+      canvas          = require('canvas'),
       Container       = require('container'),
       Item            = require('item'),
       Classification  = {};
@@ -25,13 +26,9 @@ define(function (require) {
                         };
   };
 
-  Classification.prototype.init = function (canvas, ctx) {
+  Classification.prototype.init = function (canvas) {
 
     var that = this;
-
-    this.containers.forEach( function (container) {
-      container.init(canvas);
-    });
 
     loadImages({
         item0: "images/tetra.png",
@@ -42,13 +39,14 @@ define(function (require) {
     }, function (loadedImages) {
       that.itemData.images = loadedImages;
     });
+
+    this.containers.forEach( function (container) {
+      container.init(canvas);
+    });
     
   };
 
-  // ------------------------------
-  // FUNCTIONS
-  // ------------------------------
-
+  // HANDLE COLLISIONS FOR GAME OBJECTS
   Classification.prototype.handleCollisions = function (canvas) {
     if (pointer.active) {
       this.items.forEach(function(item) {
@@ -101,7 +99,7 @@ define(function (require) {
       timer.lastBorn = timer.time;
     }
 
-    this.handleClassificationCollisions();
+    this.handleCollisions();
     this.itemsToMove = [];
     this.items.forEach( function(item) {
       if (item.picked) {
@@ -132,11 +130,11 @@ define(function (require) {
     });
     
     ctx.fillStyle = "rgba(255, 255, 0, 0.5)";
-    ctx.fillRect(this.containers[0].x, this.containers[0].y-containerHeight, this.containers[0].width, this.containers[0].height+containerHeight);
+    ctx.fillRect(this.containers[0].x, this.containers[0].y-constants.containerHeight, this.containers[0].width, this.containers[0].height+constants.containerHeight);
     ctx.fillStyle = "rgba(0, 0, 255, 0.5)";
-    ctx.fillRect(this.containers[1].x, this.containers[1].y-containerHeight, this.containers[1].width, this.containers[1].height+containerHeight);
+    ctx.fillRect(this.containers[1].x, this.containers[1].y-constants.containerHeight, this.containers[1].width, this.containers[1].height+constants.containerHeight);
     ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
-    ctx.fillRect(this.containers[2].x, this.containers[2].y-containerHeight, this.containers[2].width, this.containers[2].height+containerHeight);
+    ctx.fillRect(this.containers[2].x, this.containers[2].y-constants.containerHeight, this.containers[2].width, this.containers[2].height+constants.containerHeight);
 
     ctx.shadowColor = 'white';
     ctx.shadowBlur = 0;

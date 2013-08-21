@@ -2,6 +2,8 @@ define(function (require) {
 
   var canvas = require('canvas'),
       timer = require('timer'),
+      functions = require('functions'),
+      controls = require('controls'),
       requestAnimationFrame = require('requestAnimationFrame'),
       Menu = require('menu'),
       Classification = require('classification'),
