@@ -57,25 +57,27 @@ define(function (require) {
       });
     }
 
+    var that = this;
+
     this.items.forEach(function(item) {
-      this.containers.forEach(function(container) {
+      that.containers.forEach(function(container) {
         if (collides(item, container)) {
           if (item.type === container.type) {
-            this.totalScore += 50;
+            that.totalScore += 50;
             ++container.hits;
           } else {
-            this.totalScore -= 100;
+            that.totalScore -= 100;
             ++container.misses;
-            if (this.totalScore < 0) {
-              this.totalScore = 0;
+            if (that.totalScore < 0) {
+              that.totalScore = 0;
             }
           }
-          this.items.splice(this.items.indexOf(item),1);
+          that.items.splice(that.items.indexOf(item),1);
         }
       });
       if ((item.y+item.height) >= canvas.height) {
-        this.items.splice(this.items.indexOf(item),1);
-        this.totalScore -= 100;
+        that.items.splice(that.items.indexOf(item),1);
+        that.totalScore -= 100;
       }
     });
   };
@@ -99,11 +101,13 @@ define(function (require) {
       timer.lastBorn = timer.time;
     }
 
-    this.handleCollisions();
+    var that = this;
+
+    this.handleCollisions(canvas);
     this.itemsToMove = [];
     this.items.forEach( function(item) {
       if (item.picked) {
-        this.itemsToMove.push(item);
+        that.itemsToMove.push(item);
         item.speed = 0;
       } else {
         item.speed = constants.speed;
