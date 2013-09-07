@@ -31,10 +31,6 @@ define(function (require) {
   classification.init(canvas);
 
   loop = function () {
-    now = Date.now();
-    delta = now - then;
-    option = 0;
-    timer.time += (delta/1000);
 
     if (inMenu) {
       option = menu.update();
@@ -45,29 +41,36 @@ define(function (require) {
         case 1:
           inMenu = false;
           inClassification = true;
+          then = Date.now();
           break;
         case 2:
           inMenu = false;
           inTapping = true;
+          then = Date.now();
           break;
         case 3:
           inMenu = false;
           inPaths = true;
+          then = Date.now();
           break;
         default:
           break;
       }
     } else if (inClassification) {
+      now = Date.now();
+      delta = now - then;
+      option = 0;
+      timer.time += (delta/1000);
+      
       classification.update(delta/1000);
-      classification.render(canvas, ctx);
-    }
+      classification.render(canvas, ctx, delta/1000);
 
-    then = now;
+      then = now;
+    }
 
     requestAnimationFrame(loop);
   };
 
-  then = Date.now();
   loop();
 
 });

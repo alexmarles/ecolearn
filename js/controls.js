@@ -32,6 +32,12 @@ define(function (require) {
   addEventListener("touchend", function (e) {
     pointer.active = false;
   }, false);
+
+  addEventListener("touchmove", function (e) {
+    if (pointer.active) {
+      pointer.getTouchPos(e);
+    }
+  }, false);
   // ------------------------------
 
 });
