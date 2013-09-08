@@ -1,20 +1,22 @@
 define(function (require) {
 
-  var pointer         = require('pointer'),
-      timer           = require('timer'),
-      constants       = require('constants'),
-      canvas          = require('canvas'),
-      Container       = require('container'),
-      Item            = require('item'),
-      Button          = require('button');
+  var pointer         = require("pointer"),
+      timer           = require("timer"),
+      constants       = require("constants"),
+      canvas          = require("canvas"),
+      Container       = require("container"),
+      Item            = require("item"),
+      Button          = require("bubble"),
+      Button          = require("button");
       Classification  = {};
 
   Classification = function () {
     this.background   = new Image;
     this.scoreBg      = new Image;
     this.exit         = false;
-    this.exitBtn      = new Button(140, 2, 75, 30, "rgba(255, 50, 50, 1)", "Sortir");
+    this.exitBtn      = new Button(150, 2, 75, 30, "rgba(255, 50, 50, 1)", "Sortir");
     this.inGame       = true;
+    this.bubbles      = [];
     this.totalScore   = 0;
     this.hasObject    = false;
     this.containers   = [new Container(0), new Container(1), new Container(2)];
@@ -77,9 +79,11 @@ define(function (require) {
         if (collides(item, container)) {
           if (item.type === container.type) {
             that.totalScore += 50;
+            that.bubbles.push(new Bubble(true, item, "+50"));
             ++container.hits;
           } else {
             that.totalScore -= 100;
+            that.bubbles.push(new Bubble(false, item, "-100"));
             ++container.misses;
             if (that.totalScore < 0) {
               that.totalScore = 0;
@@ -97,6 +101,9 @@ define(function (require) {
 
   // Update game objects
   Classification.prototype.update = function (modifier) {
+    var that = this,
+        toRemove = null;
+
     if (this.inGame) {
       if (pointer.active) {
 
@@ -116,8 +123,6 @@ define(function (require) {
         timer.lastBorn = timer.time;
       }
 
-      var that = this;
-
       this.handleCollisions(canvas);
       this.itemsToMove = [];
       this.items.forEach( function(item) {
@@ -133,7 +138,17 @@ define(function (require) {
         }
       });
 
-      if (timer.time > 6) {
+      this.bubbles.forEach( function(bubble) {
+        if(timer.time - bubble.born >= 2) {
+          toRemove = that.bubbles.indexOf(bubble);
+        }
+      });
+      if (toRemove != null) {
+        this.bubbles.splice(toRemove,1);
+      }
+      toRemove = null;
+
+      if (timer.time > 61) {
         this.inGame = false;
       }
     }
@@ -161,14 +176,18 @@ define(function (require) {
       this.items.forEach( function(item) {
         item.rotate(ctx);
       });
-      
+
       ctx.shadowColor = "white";
       ctx.shadowBlur = 0;
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 0;
 
+      this.bubbles.forEach( function(bubble) {
+        bubble.render();
+      });
+
       ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-      ctx.fillRect(0, 0, canvas.width, 35);
+      ctx.fillRect(0, 0, canvas.width, 40);
 
       ctx.font = "24px Helvetica";
       ctx.textAlign = "left";

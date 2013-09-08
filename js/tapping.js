@@ -1,207 +1,190 @@
-function tapping() {
+define(function (require) {
+  var pointer         = require("pointer"),
+      timer           = require("timer"),
+      constants       = require("constants"),
+      canvas          = require("canvas"),
+      Item            = require("item"),
+      Bubble          = require("bubble"),
+      Button          = require("button"),
+      Tapping         = {};
 
-  // Creating canvas
-  var canvas = document.createElement(navigator.isCocoonJS ? 'screencanvas' : 'canvas');
-  canvas.id = 'game';
-  document.body.appendChild(canvas);
-  var ctx = canvas.getContext("2d");
-  canvas.width = 360;
-  canvas.height = 640;
-
-  // ------------------------------
-  // CONSTANTS
-  // ------------------------------
-  var frequency = 2;
- 
-  var itemWidth = 100;
-
-  // ------------------------------
-  // OBJECTS
-  // ------------------------------
-  var pointer = {
-    x: 0,
-    y: 0,
-    width: 1,
-    height: 1
+  Tapping = function () {
+    this.background   = new Image;
+    this.exit         = false;
+    this.exitBtn      = new Button(150, 2, 75, 30, "rgba(255, 50, 50, 1)", "Sortir");
+    this.inGame       = true;
+    this.bubbles      = [];
+    this.totalScore   = 0;
+    this.items        = [];
+    this.itemData     = {
+                          images: {},
+                          sizes: {
+                            item0: constants.itemWidth,
+                            item1: constants.itemWidth,
+                            item2: constants.itemWidth,
+                          }
+                        };
   };
 
-  // ------------------------------
-  // VARIABLES
-  // ------------------------------
+  Tapping.prototype.init = function (canvas) {
+    var that = this;
 
-  var totalScore = 0;
-  var pointerActive = false;
-  var itemData = {
-    images: [],
-    sizes: {
-      poke0: itemWidth,
-      poke1: itemWidth,
-      poke2: itemWidth
-    }
+    this.background.src = "images/tap_bg.png";
+
+    loadImages({
+        item0: "images/bottle.png",
+        item1: "images/can.png",
+        item2: "images/paper.png",
+    }, function (loadedImages) {
+      that.itemData.images = loadedImages;
+    });
   };
-
-  // ------------------------------
-  // CONTROLS
-  // ------------------------------
-
-  // Mouse controls
-  var getMousePos = function (e) {
-    var rect = canvas.getBoundingClientRect();
-    pointer.x = e.clientX - rect.left;
-    pointer.y = e.clientY - rect.top;
-  };
-
-  addEventListener("mousedown", function (e) {
-    pointerActive = true;
-    getMousePos(e);
-  }, false);
-
-  addEventListener("mouseup", function (e) {
-    pointerActive = false;
-  }, false);
-
-  // Touch controls
-  var getTouchPos = function (e) {
-    pointer.x = e.targetTouches[0].pageX;
-    pointer.y = e.targetTouches[0].pageY;
-  };
-
-  addEventListener("touchstart", function (e) {
-    pointerActive = true;
-    getTouchPos(e);
-  }, false);
-
-  addEventListener("touchend", function (e) {
-    pointerActive = false;
-  }, false);
 
   // ------------------------------
   // FUNCTIONS
   // ------------------------------
-  var addNewItem = function () {
-    var item = new Item(canvas, 0, 0, itemData);
-    item.y = random(canvas.height - item.width);
+  Tapping.prototype.addNewItem = function () {
+    var item = new Item(canvas, random(3), 0, this.itemData);
+
+    item.y = random(canvas.height - item.width) + 40;
     item.born = timer.time;
-    items.push(item);
+    this.items.push(item);
   };
 
-  var handleCollisions = function () {
-    if (pointerActive) {
-      items.forEach(function(item) {
+  Tapping.prototype.handleCollisions = function () {
+    var that = this,
+        toRemove = null;
+
+    if (pointer.active) {
+      this.items.forEach(function(item) {
         if (collides(item, pointer)) {
-          pointerActive = false;
-          switch(item.type)
-          {
-            case 0:
-              totalScore += 1;
-              break;
-            case 1:
-              totalScore += 10;
-              break;
-            case 2:
-              totalScore += 50;
-              break;
-          }
-          items.splice(items.indexOf(item),1);
+          pointer.active = false;
+          that.totalScore += 50;
+          that.bubbles.push(new Bubble(true, item, "+50"));
+          toRemove = that.items.indexOf(item);
         }
       });
     }
+    if (toRemove != null) {
+      this.items.splice(toRemove,1);
+    }
+    toRemove = null;
   };
   
   // UPDATE game objects
-  var update = function (modifier) {
-    if (timer.time - timer.lastBorn > frequency) {
-      addNewItem();
-      timer.lastBorn = timer.time;
-    }
-    handleCollisions();
-    items.forEach( function(item) {
-      if(timer.time - item.born >= 2) {
-        item.changeType(1);
+  Tapping.prototype.update = function (modifier) {
+    var that = this,
+        toRemove = null;
+
+    if (this.inGame) {
+      if (timer.time - timer.lastBorn > constants.frequency) {
+        this.addNewItem();
+        timer.lastBorn = timer.time;
       }
-      if(timer.time - item.born >= 4) {
-        item.changeType(2);
-      }
-      if(timer.time - item.born >= 5) {
-        items.splice(items.indexOf(item),1);
-        totalScore -= 100;
-        if (totalScore < 0) {
-          totalScore = 0;
+
+      this.handleCollisions();
+
+      this.items.forEach( function(item) {
+        if(timer.time - item.born >= 5) {
+          toRemove = that.items.indexOf(item);
+          that.totalScore -= 100;
+          that.bubbles.push(new Bubble(false, item, "-100"));
+          if (that.totalScore < 0) {
+            that.totalScore = 0;
+          }
         }
+        item.rotation += 100 * modifier;
+      });
+      if (toRemove != null) {
+        this.items.splice(toRemove,1);
       }
-      item.rotation += 100 * modifier;
-    });
+      toRemove = null;
+
+      this.bubbles.forEach( function(bubble) {
+        if(timer.time - bubble.born >= 2) {
+          toRemove = that.bubbles.indexOf(bubble);
+        }
+      });
+      if (toRemove != null) {
+        this.bubbles.splice(toRemove,1);
+      }
+      toRemove = null;
+
+      if (timer.time > 61) {
+        this.inGame = false;
+      }
+    }
+
+    if (pointer.active && collides(this.exitBtn, pointer)) {
+      this.exit = true;
+    }
+
+    return !this.exit;
   };
 
   // RENDER game objects
-  var render = function () {
-    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  Tapping.prototype.render = function(canvas, ctx) {
 
-    ctx.shadowColor = 'black';
-    ctx.shadowBlur = 5;
-    ctx.shadowOffsetX = 2;
-    ctx.shadowOffsetY = 2;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    items.forEach( function(item) {
-      if (navigator.isCocoonJS) {
-        ctx.beginPath();
-        ctx.arc(item.x+(item.width/2)+1, item.y+(item.height/2)+1, item.height/2, 0, 2*Math.PI);
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
-        ctx.fill(),
-        ctx.stroke();
-      }
-      item.rotate(ctx);
-    });
+    if (this.inGame) {
+      ctx.globalAlpha = 0.80;
+      ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
+      ctx.globalAlpha = 1;
 
-    ctx.shadowColor = 'white';
-    ctx.shadowBlur = 0;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
+      ctx.shadowColor = 'black';
+      ctx.shadowBlur = 1;
+      ctx.shadowOffsetX = 2;
+      ctx.shadowOffsetY = 2;
 
-    ctx.font = "24px Helvetica";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "top";
-    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-    ctx.fillText("SCORE: " + totalScore, 5, 5);
-    ctx.textAlign = "right";
-    ctx.fillText("TIME: " + parseInt(timer.time), 355, 5);
+      this.items.forEach( function(item) {
+        ctx.globalAlpha = 1 - (0.2*(timer.time - item.born));
+        item.rotate(ctx);
+      });
+      ctx.globalAlpha = 1;
+
+      ctx.shadowColor = "white";
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+
+      this.bubbles.forEach( function(bubble) {
+        bubble.render();
+      });
+
+      ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+      ctx.fillRect(0, 0, canvas.width, 40);
+
+      ctx.font = "24px Helvetica";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "top";
+      ctx.fillStyle = "black";
+      ctx.fillText("PUNTS: " + this.totalScore, 5, 5);
+      ctx.textAlign = "right";
+      ctx.fillText("TEMPS: " + parseInt(timer.time), 355, 5);
+
+      this.exitBtn.render(ctx);
+    } else {
+      ctx.globalAlpha = 0.25;
+      ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
+      ctx.globalAlpha = 1;
+
+      ctx.font = "20px Helvetica";
+      ctx.textAlign = "center";
+      ctx.fillStyle = "black";
+      ctx.fillText("HAS FET UNA PUNTUACIÓ DE...", 180, 150);
+      ctx.fillText("FELICITATS!", 180, 280);
+      ctx.fillText("TORNA A JUGAR SI VOLS", 180, 330);
+      ctx.fillText("MILLORAR LA TEVA PUNTUACIÓ", 180, 350);
+      ctx.font = "24px Helvetica";
+      ctx.fillStyle = "blue";
+      ctx.fillText(this.totalScore + " PUNTS!", 180, 220);
+
+      this.exitBtn = new Button(130, 400, 100, 100, "rgba(255, 50, 50, 1)", "Sortir");
+      this.exitBtn.render(ctx);
+    }
   };
 
-  // Request Animation Frame for loop
-  var requestAnimFrame = (function(){
-    return  window.requestAnimationFrame       ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame    ||
-    function( callback ){
-      window.setTimeout(callback, 1000 / 60);
-    };
-  })();
+  return Tapping;
 
-  // Main program
-
-  var loopTap = function () {
-    var now = Date.now();
-    var delta = now - then;
-    timer.time += (delta/1000);
-
-    update(delta/1000);
-    render();
-
-    then = now;
-    
-    requestAnimFrame(loopTap);
-  };
-
-  var then = Date.now();
-
-  loadImages({
-      poke0: "images/poke0.png",
-      poke1: "images/poke1.png",
-      poke2: "images/poke2.png"
-  }, function (loadedImages) {
-    itemData.images = loadedImages;
-    loopTap();
-  });
-}
+});

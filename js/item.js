@@ -3,7 +3,7 @@
 // ------------------------------
 
 define(function (require) {
-      Item = {};
+  var Item = {};
 
   Item = function (canvas, type, speed, data) {
     this.canvas = canvas;
