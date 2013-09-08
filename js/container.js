@@ -18,7 +18,7 @@ define(function (require) {
 
   Container.prototype.init = function (canvas) {
     this.x = (canvas.width/6)*(this.type*2+1) - (constants.containerWidth/2);
-    this.y = canvas.height - (constants.containerHeight*0.75 + 10);
+    this.y = canvas.height - (constants.containerHeight*0.25 + 10);
   }
 
   return Container;

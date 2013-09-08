@@ -6,13 +6,15 @@ define(function (require) {
       canvas          = require('canvas'),
       Container       = require('container'),
       Item            = require('item'),
+      Button          = require('button');
       Classification  = {};
 
   Classification = function () {
     this.background   = new Image;
     this.scoreBg      = new Image;
+    this.exit         = false;
+    this.exitBtn      = new Button(140, 2, 75, 30, "rgba(255, 50, 50, 1)", "Sortir");
     this.inGame       = true;
-    this.scoreOpacity = null;
     this.totalScore   = 0;
     this.hasObject    = false;
     this.containers   = [new Container(0), new Container(1), new Container(2)];
@@ -37,7 +39,6 @@ define(function (require) {
 
     this.background.src = "images/clas_bg.png";
     this.scoreBg.src = "images/clas_bg_score.png";
-    this.scoreOpacity = 0;
 
     loadImages({
         item0: "images/tetra.png",
@@ -59,6 +60,7 @@ define(function (require) {
   // HANDLE COLLISIONS FOR GAME OBJECTS
   Classification.prototype.handleCollisions = function (canvas) {
     var that = this,
+        value = 0,
         toRemove = null;
 
     if (pointer.active) {
@@ -97,6 +99,7 @@ define(function (require) {
   Classification.prototype.update = function (modifier) {
     if (this.inGame) {
       if (pointer.active) {
+
         this.itemsToMove.forEach(function(iTM) {
           iTM.x = pointer.x-(iTM.width/2);
           iTM.y = pointer.y-(iTM.height/2);
@@ -130,18 +133,22 @@ define(function (require) {
         }
       });
 
-      if (timer.time > 60) {
+      if (timer.time > 6) {
         this.inGame = false;
       }
     }
-      
+
+    if (pointer.active && collides(this.exitBtn, pointer)) {
+      this.exit = true;
+    }
+
+    return !this.exit;
   };
 
   // RENDER game objects
-  Classification.prototype.render = function(canvas, ctx, modifier) {
+  Classification.prototype.render = function(canvas, ctx) {
 
-    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (this.inGame) {
       ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
@@ -160,6 +167,9 @@ define(function (require) {
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 0;
 
+      ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+      ctx.fillRect(0, 0, canvas.width, 35);
+
       ctx.font = "24px Helvetica";
       ctx.textAlign = "left";
       ctx.textBaseline = "top";
@@ -167,22 +177,26 @@ define(function (require) {
       ctx.fillText("PUNTS: " + this.totalScore, 5, 5);
       ctx.textAlign = "right";
       ctx.fillText("TEMPS: " + parseInt(timer.time), 355, 5);
+
+      this.exitBtn.render(ctx);
     } else {
+      ctx.globalAlpha = 0.25;
       ctx.drawImage(this.scoreBg, 0, 0, canvas.width, canvas.height);
+      ctx.globalAlpha = 1;
 
       ctx.font = "20px Helvetica";
       ctx.textAlign = "center";
       ctx.fillStyle = "black";
-      ctx.fillText("HAS FET UNA PUNTUACIÓ DE...", 180, 200);
-      ctx.fillText("FELICITATS!", 180, 330);
-      ctx.fillText("TORNA A JUGAR SI VOLS", 180, 380);
-      ctx.fillText("MILLORAR LA TEVA PUNTUACIÓ", 180, 400);
+      ctx.fillText("HAS FET UNA PUNTUACIÓ DE...", 180, 150);
+      ctx.fillText("FELICITATS!", 180, 280);
+      ctx.fillText("TORNA A JUGAR SI VOLS", 180, 330);
+      ctx.fillText("MILLORAR LA TEVA PUNTUACIÓ", 180, 350);
       ctx.font = "24px Helvetica";
-      if (this.scoreOpacity < 1) {
-        this.scoreOpacity += 0.5*modifier;
-      }
-      ctx.fillStyle = "rgba(0, 0, 255, " + this.scoreOpacity + ")";
-      ctx.fillText(this.totalScore + " PUNTS!", 180, 270);
+      ctx.fillStyle = "blue";
+      ctx.fillText(this.totalScore + " PUNTS!", 180, 220);
+
+      this.exitBtn = new Button(130, 400, 100, 100, "rgba(255, 50, 50, 1)", "Sortir");
+      this.exitBtn.render(ctx);
     }
   };
 

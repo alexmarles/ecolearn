@@ -9,8 +9,9 @@ define(function (require) {
 
   // INITIALIZE THE MENU OBJECTS
   Menu.prototype.init = function () {
-    this.buttons.push(new Button(80, 200, 200, 100, "rgba(0, 0, 255, 1)", "Classification"));
-    this.buttons.push(new Button(80, 350, 200, 100, "rgba(0, 0, 255, 1)", "Tapping"));
+    this.buttons.push(new Button(80, 100, 200, 100, "rgba(50, 50, 255, 1)", "Classification"));
+    this.buttons.push(new Button(80, 250, 200, 100, "rgba(50, 50, 255, 1)", "Tapping"));
+    this.buttons.push(new Button(80, 400, 200, 100, "rgba(50, 50, 255, 1)", "Plant"));
   };
 
   // HANDLE COLLISIONS FOR MENU OBJECTS
@@ -37,16 +38,9 @@ define(function (require) {
     ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.shadowColor = 'black';
-    ctx.shadowBlur = 1;
-    ctx.shadowOffsetX = 2;
-    ctx.shadowOffsetY = 2;
-
     this.buttons.forEach( function (button) {
         button.render(ctx);
     });
-
-    ctx.shadowColor = 'white';
   };
 
   return Menu;

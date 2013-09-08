@@ -12,6 +12,7 @@ define(function (require) {
     this.x = random(this.canvas.width - this.width);
     this.y = this.height;
 
+    this.born = 0;
     this.picked = false;
     this.speed = speed;
     this.rotation = 0;
@@ -24,7 +25,6 @@ define(function (require) {
       this.type = type;
     this.image = this.data.images["item" + type];
 
-    console.log(this.image);
     var ratio = this.image.width / this.image.height;
     this.image.width = this.data.sizes["item" + type];
     this.image.height = this.data.sizes["item" + type] / ratio;
