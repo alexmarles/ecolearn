@@ -11,7 +11,7 @@ define(function (require) {
   Tapping = function () {
     this.background   = new Image;
     this.exit         = false;
-    this.exitBtn      = new Button(150, 2, 75, 30, "rgba(255, 50, 50, 1)", "Sortir");
+    this.exitBtn      = new Button(165, 3, 30, 30, "rgba(255, 50, 50, 1)", "X");
     this.inGame       = true;
     this.bubbles      = [];
     this.totalScore   = 0;
@@ -180,7 +180,7 @@ define(function (require) {
       ctx.fillStyle = "blue";
       ctx.fillText(this.totalScore + " PUNTS!", 180, 220);
 
-      this.exitBtn = new Button(130, 400, 100, 100, "rgba(255, 50, 50, 1)", "Sortir");
+      this.exitBtn = new Button(80, 400, 200, 100, "rgba(255, 50, 50, 1)", "Tornar al menú");
       this.exitBtn.render(ctx);
     }
   };

@@ -12,8 +12,8 @@ define(function (require) {
   Button.prototype.render = function (ctx) {
     ctx.shadowColor = "black";
     ctx.shadowBlur = 1;
-    ctx.shadowOffsetX = 5;
-    ctx.shadowOffsetY = 5;
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 2;
 
     ctx.fillStyle = this.color;
     ctx.fillRect(this.x, this.y, this.width, this.height);
