@@ -14,7 +14,7 @@ define(function (require) {
     this.background   = new Image;
     this.scoreBg      = new Image;
     this.exit         = false;
-    this.exitBtn      = new Button(165, 3, 30, 30, "rgba(255, 50, 50, 1)", "X");
+    this.exitBtn      = new Button(165, 4, 30, 30, "rgba(255, 50, 50, 1)", "X");
     this.inGame       = true;
     this.bubbles      = [];
     this.totalScore   = 0;
@@ -118,7 +118,7 @@ define(function (require) {
         });
       }
 
-      if (timer.time - timer.lastBorn > constants.frequency) {
+      if ((timer.time - timer.lastBorn) > (constants.frequency - 0.02*timer.time)) {
         this.items.push(new Item(canvas, random(6), constants.speed, this.itemData));
         timer.lastBorn = timer.time;
       }
@@ -207,9 +207,8 @@ define(function (require) {
       ctx.textAlign = "center";
       ctx.fillStyle = "black";
       ctx.fillText("HAS FET UNA PUNTUACIÓ DE...", 180, 150);
-      ctx.fillText("FELICITATS!", 180, 280);
-      ctx.fillText("TORNA A JUGAR SI VOLS", 180, 330);
-      ctx.fillText("MILLORAR LA TEVA PUNTUACIÓ", 180, 350);
+      ctx.fillText("TORNA A JUGAR SI VOLS", 180, 280);
+      ctx.fillText("MILLORAR LA TEVA PUNTUACIÓ", 180, 330);
       ctx.font = "24px Helvetica";
       ctx.fillStyle = "blue";
       ctx.fillText(this.totalScore + " PUNTS!", 180, 220);

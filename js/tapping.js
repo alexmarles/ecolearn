@@ -11,7 +11,7 @@ define(function (require) {
   Tapping = function () {
     this.background   = new Image;
     this.exit         = false;
-    this.exitBtn      = new Button(165, 3, 30, 30, "rgba(255, 50, 50, 1)", "X");
+    this.exitBtn      = new Button(165, 4, 30, 30, "rgba(255, 50, 50, 1)", "X");
     this.inGame       = true;
     this.bubbles      = [];
     this.totalScore   = 0;
@@ -77,7 +77,7 @@ define(function (require) {
         toRemove = null;
 
     if (this.inGame) {
-      if (timer.time - timer.lastBorn > constants.frequency) {
+      if ((timer.time - timer.lastBorn) > (constants.frequency - 0.02*timer.time)) {
         this.addNewItem();
         timer.lastBorn = timer.time;
       }

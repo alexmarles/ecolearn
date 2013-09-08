@@ -9,9 +9,9 @@ define(function (require) {
 
   // INITIALIZE THE MENU OBJECTS
   Menu.prototype.init = function () {
-    this.buttons.push(new Button(80, 100, 200, 100, "rgba(50, 50, 255, 1)", "Classification"));
-    this.buttons.push(new Button(80, 250, 200, 100, "rgba(50, 50, 255, 1)", "Tapping"));
-    this.buttons.push(new Button(80, 400, 200, 100, "rgba(50, 50, 255, 1)", "Plant"));
+    this.buttons.push(new Button(50, 100, 250, 100, "rgba(50, 50, 255, 1)", "Separem els residus!"));
+    this.buttons.push(new Button(50, 250, 250, 100, "rgba(50, 50, 255, 1)", "Netejem el carrer!"));
+    this.buttons.push(new Button(50, 400, 250, 100, "rgba(50, 50, 255, 1)", "Reciclem-ho tot!"));
   };
 
   // HANDLE COLLISIONS FOR MENU OBJECTS
