@@ -9,8 +9,8 @@ define(function (require) {
 
   // INITIALIZE THE MENU OBJECTS
   Menu.prototype.init = function () {
-    this.buttons.push(new Button(55, 200, 250, 100, "rgba(50, 50, 255, 1)", "Separem els residus!"));
-    this.buttons.push(new Button(55, 350, 250, 100, "rgba(50, 50, 255, 1)", "Netejem el carrer!"));
+    this.buttons.push(new Button(55, 330, 250, 100, "rgba(50, 50, 255, 1)", "Separem els residus!"));
+    this.buttons.push(new Button(55, 450, 250, 100, "rgba(50, 50, 255, 1)", "Netejem el carrer!"));
   };
 
   // HANDLE COLLISIONS FOR MENU OBJECTS
@@ -34,6 +34,7 @@ define(function (require) {
 
   // RENDER MENU OBJECTS
   Menu.prototype.render = function (canvas, ctx) {
+    ctx.globalAlpha = 1;
     ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 

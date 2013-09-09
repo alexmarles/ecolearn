@@ -15,8 +15,12 @@ define(function (require) {
     this.next         = new Button(canvas.width-105, canvas.height-55, 100, 50, "rgba(50, 50, 255, 1)", "Següent");
     this.background   = new Image;
     this.scoreBg      = new Image;
+    this.pause        = false;
+    this.pauseBtn     = new Button(165, 4, 30, 30, "rgba(50, 50, 255, 1)", "||");
+    this.resumeBtn    = new Button(110, 100, 140, 100, "rgba(50, 50, 255, 1)", "Tornar al joc");
+    this.timePause    = 0;
     this.exit         = false;
-    this.exitBtn      = new Button(165, 4, 30, 30, "rgba(255, 50, 50, 1)", "X");
+    this.exitBtn      = new Button(110, 210, 140, 100, "rgba(255, 50, 50, 1)", "Sortir");
     this.inGame       = 0;
     this.bubbles      = [];
     this.totalScore   = 0;
@@ -107,60 +111,76 @@ define(function (require) {
         next = false,
         toRemove = null;
 
-    if (this.inGame === 0) {
-      if (pointer.active && collides(this.next, pointer)) {
-        ++this.page;
-      }
-    } else if (this.inGame === 1) {
-      if (pointer.active) {
+    if (!this.pause) {
+      if (this.inGame === 0) {
+        if (pointer.active && collides(this.next, pointer)) {
+          ++this.page;
+        }
+      } else if (this.inGame === 1) {
+        if (pointer.active) {
 
-        this.itemsToMove.forEach(function(iTM) {
-          iTM.x = pointer.x-(iTM.width/2);
-          iTM.y = pointer.y-(iTM.height/2);
-        });
-      } else {
-        this.hasObject = false;
-        this.items.forEach(function(item) {
-          item.picked = false;
-        });
-      }
-
-      if ((timer.time - timer.lastBorn) > (constants.frequency - 0.02*timer.time)) {
-        this.items.push(new Item(canvas, random(6), constants.speed, this.itemData));
-        timer.lastBorn = timer.time;
-      }
-
-      this.handleCollisions(canvas);
-      this.itemsToMove = [];
-      this.items.forEach( function(item) {
-        if (item.picked) {
-          that.itemsToMove.push(item);
-          item.speed = 0;
+          this.itemsToMove.forEach(function(iTM) {
+            iTM.x = pointer.x-(iTM.width/2);
+            iTM.y = pointer.y-(iTM.height/2);
+          });
         } else {
-          item.speed = constants.speed;
+          this.hasObject = false;
+          this.items.forEach(function(item) {
+            item.picked = false;
+          });
         }
-        item.y += item.speed * modifier;
-        if (!item.picked) {
-          item.rotation += 50 * modifier;
-        }
-      });
 
-      this.bubbles.forEach( function(bubble) {
-        if(timer.time - bubble.born >= 2) {
-          toRemove = that.bubbles.indexOf(bubble);
+        if ((timer.time - timer.lastBorn) > (constants.frequency - 0.02*timer.time)) {
+          this.items.push(new Item(canvas, random(6), constants.speed, this.itemData));
+          timer.lastBorn = timer.time;
         }
-      });
-      if (toRemove != null) {
-        this.bubbles.splice(toRemove,1);
-      }
-      toRemove = null;
 
-      if (timer.time > 61) {
-        this.inGame = 2;
+        this.handleCollisions(canvas);
+        this.itemsToMove = [];
+        this.items.forEach( function(item) {
+          if (item.picked) {
+            that.itemsToMove.push(item);
+            item.speed = 0;
+          } else {
+            item.speed = constants.speed;
+          }
+          item.y += item.speed * modifier;
+          if (!item.picked) {
+            item.rotation += 50 * modifier;
+          }
+        });
+
+        this.bubbles.forEach( function(bubble) {
+          if(timer.time - bubble.born >= 2) {
+            toRemove = that.bubbles.indexOf(bubble);
+          }
+        });
+        if (toRemove != null) {
+          this.bubbles.splice(toRemove,1);
+        }
+        toRemove = null;
+
+        if (timer.time > 61) {
+          this.inGame = 2;
+        }
       }
     }
-    if (pointer.active && collides(this.exitBtn, pointer)) {
-      this.exit = true;
+
+    if (!this.pause) {
+      if (pointer.active && collides(this.pauseBtn, pointer)) {
+        this.pause = true;
+        this.timePause = timer.time;
+      }
+    } else {
+      if (pointer.active && collides(this.resumeBtn, pointer)) {
+        this.pause = false;
+        timer.time = this.timePause;
+        this.timePause = 0;
+      }
+
+      if (pointer.active && collides(this.exitBtn, pointer)) {
+        this.exit = true;
+      }
     }
 
     return !this.exit;
@@ -214,9 +234,22 @@ define(function (require) {
       ctx.fillStyle = "black";
       ctx.fillText("PUNTS: " + this.totalScore, 5, 5);
       ctx.textAlign = "right";
-      ctx.fillText("TEMPS: " + parseInt(timer.time), 355, 5);
+      if (this.pause) {
+        ctx.fillText("TEMPS: " + parseInt(this.timePause), 355, 5);
+      } else {
+        ctx.fillText("TEMPS: " + parseInt(timer.time), 355, 5);
+      }
 
-      this.exitBtn.render(ctx);
+      this.pauseBtn.render(ctx);
+
+      if (this.pause) {
+        ctx.globalAlpha = 1;
+        this.resumeBtn.render(ctx);
+        this.exitBtn.render(ctx);
+        ctx.globalAlpha = 0.25;
+      } else {
+        ctx.globalAlpha = 1;
+      }
     } else {
       ctx.globalAlpha = 0.25;
       ctx.drawImage(this.scoreBg, 0, 0, canvas.width, canvas.height);
