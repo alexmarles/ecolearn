@@ -6,16 +6,18 @@ define(function (require) {
       canvas          = require("canvas"),
       Container       = require("container"),
       Item            = require("item"),
-      Button          = require("bubble"),
+      Bubble          = require("bubble"),
       Button          = require("button");
       Classification  = {};
 
   Classification = function () {
+    this.page         = 0;
+    this.next         = new Button(canvas.width-105, canvas.height-55, 100, 50, "rgba(50, 50, 255, 1)", "Següent");
     this.background   = new Image;
     this.scoreBg      = new Image;
     this.exit         = false;
     this.exitBtn      = new Button(165, 4, 30, 30, "rgba(255, 50, 50, 1)", "X");
-    this.inGame       = true;
+    this.inGame       = 0;
     this.bubbles      = [];
     this.totalScore   = 0;
     this.hasObject    = false;
@@ -102,9 +104,14 @@ define(function (require) {
   // Update game objects
   Classification.prototype.update = function (modifier) {
     var that = this,
+        next = false,
         toRemove = null;
 
-    if (this.inGame) {
+    if (this.inGame === 0) {
+      if (pointer.active && collides(this.next, pointer)) {
+        ++this.page;
+      }
+    } else if (this.inGame === 1) {
       if (pointer.active) {
 
         this.itemsToMove.forEach(function(iTM) {
@@ -149,10 +156,9 @@ define(function (require) {
       toRemove = null;
 
       if (timer.time > 61) {
-        this.inGame = false;
+        this.inGame = 2;
       }
     }
-
     if (pointer.active && collides(this.exitBtn, pointer)) {
       this.exit = true;
     }
@@ -165,7 +171,20 @@ define(function (require) {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (this.inGame) {
+    if (this.inGame === 0) {
+      switch (this.page) {
+        case 0:
+          ctx.globalAlpha = 0.25;
+          ctx.drawImage(this.scoreBg, 0, 0, canvas.width, canvas.height);
+          ctx.globalAlpha = 1;
+
+          this.next.render(ctx);
+          break;
+        default:
+          ++this.inGame;
+          break;
+      }
+    } else if (this.inGame === 1) {
       ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
 
       ctx.shadowColor = "black";

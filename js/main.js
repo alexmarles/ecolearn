@@ -13,12 +13,10 @@ define(function (require) {
       inMenu = true,
       inClassification = false,
       inTapping = false,
-      inPaths = false,
       loop = {},
       menu = {},
       classification = {},
       tapping = {},
-      paths = {},
       main = {},
       now = 0,
       delta = 0,
@@ -36,7 +34,6 @@ define(function (require) {
         case 0:
           classification = {};
           tapping = {};
-          paths = {};
           menu.render(canvas, ctx);
           break;
         case 1:
@@ -53,13 +50,6 @@ define(function (require) {
           tapping.init(canvas);
           then = Date.now();
           break;
-        // case 3:
-        //   inMenu = false;
-        //   inPaths = true;
-        //   paths = new Paths();
-        //   paths.init(canvas);
-        //   then = Date.now();
-        //   break;
         default:
           break;
       }
