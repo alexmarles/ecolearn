@@ -59,8 +59,8 @@ define(function (require) {
       this.items.forEach(function(item) {
         if (collides(item, pointer)) {
           pointer.active = false;
-          that.totalScore += 50;
-          that.bubbles.push(new Bubble(true, item, "+50"));
+          that.totalScore += constants.hit;
+          that.bubbles.push(new Bubble(true, item, "+"+constants.hit));
           toRemove = that.items.indexOf(item);
         }
       });
@@ -72,7 +72,7 @@ define(function (require) {
   };
   
   // UPDATE game objects
-  Tapping.prototype.update = function (modifier) {
+  Tapping.prototype.update = function (modifier) {+constants.hit
     var that = this,
         toRemove = null;
 
@@ -87,8 +87,8 @@ define(function (require) {
       this.items.forEach( function(item) {
         if(timer.time - item.born >= 5) {
           toRemove = that.items.indexOf(item);
-          that.totalScore -= 100;
-          that.bubbles.push(new Bubble(false, item, "-100"));
+          that.totalScore -= constants.miss;
+          that.bubbles.push(new Bubble(false, item, "-"+constants.miss));
           if (that.totalScore < 0) {
             that.totalScore = 0;
           }

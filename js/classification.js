@@ -80,12 +80,12 @@ define(function (require) {
       that.containers.forEach(function(container) {
         if (collides(item, container)) {
           if (item.type === container.type) {
-            that.totalScore += 50;
-            that.bubbles.push(new Bubble(true, item, "+50"));
+            that.totalScore += constants.hit;
+            that.bubbles.push(new Bubble(true, item, "+"+constants.hit));
             ++container.hits;
           } else {
-            that.totalScore -= 100;
-            that.bubbles.push(new Bubble(false, item, "-100"));
+            that.totalScore -= constants.miss;
+            that.bubbles.push(new Bubble(false, item, "-"+constants.miss));
             ++container.misses;
             if (that.totalScore < 0) {
               that.totalScore = 0;
