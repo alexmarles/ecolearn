@@ -12,7 +12,7 @@ define(function (require) {
 
   Classification = function () {
     this.page         = 0;
-    this.next         = new Button(canvas.width-105, canvas.height-55, 100, 50, "rgba(60, 175, 60, 1)", "Següent");
+    this.next         = new Button(canvas.width-150, canvas.height-100, 100, 50, "rgba(60, 175, 60, 1)", "Següent");
     this.bin0         = new Image;
     this.bin1         = new Image;
     this.bin2         = new Image;
@@ -245,7 +245,7 @@ define(function (require) {
           this.next.render(ctx);
           break;
         case 2:
-          ctx.font = "16px "+constants.font;
+          ctx.font = "18px "+constants.font;
           ctx.textAlign = "center";
           ctx.fillStyle = "black";
           ctx.fillText("La recollida selectiva", 180, 50);
@@ -267,13 +267,15 @@ define(function (require) {
           ctx.fillStyle = "black";
           ctx.fillText("Arrossega els residus que cauen", 180, 50);
           ctx.fillText("al contenidor que els pertoca.", 180, 90);
-          ctx.fillText("Si ho fas bé, guanyaràs", 180, 130);
+          ctx.fillText("Si ho fas correctament", 180, 130);
+          ctx.fillText("guanyaràs      punts,", 180, 170);
           ctx.fillStyle = "rgba(60, 175, 60, 1)";
-          ctx.fillText(constants.hit+" punts", 180, 170);
+          ctx.fillText(constants.hit, 200, 170);
           ctx.fillStyle = "black";
-          ctx.fillText("però si no ho fas bé, perdràs", 180, 210);
+          ctx.fillText("però si t'equivoques", 180, 210);
+          ctx.fillText("perdràs       punts.", 180, 250);
           ctx.fillStyle = "rgba(175, 60, 60, 1)";
-          ctx.fillText(constants.miss+" punts", 180, 250);
+          ctx.fillText(constants.miss, 190, 250);
           ctx.fillStyle = "black";
           ctx.fillText("Classifica tots els residus", 180, 290);
           ctx.fillText("sense equivocar-te i", 180, 330);
@@ -353,7 +355,7 @@ define(function (require) {
       ctx.fillStyle = "blue";
       ctx.fillText(this.totalScore + " PUNTS!", 180, 220);
 
-      this.exitBtn = new Button(80, 400, 200, 100, "rgba(255, 50, 50, 1)", "Tornar al menú");
+      this.exitBtn = new Button(80, 400, 200, 100, "rgba(175, 60, 60, 1)", "Tornar al menú");
       this.exitBtn.render(ctx);
     }
   };

@@ -169,7 +169,7 @@ define(function (require) {
       ctx.globalAlpha = 1;
       switch (this.page) {
         case 0:
-          ctx.font = "16px "+constants.font;
+          ctx.font = "18px "+constants.font;
           ctx.textAlign = "center";
           ctx.fillStyle = "black";
           ctx.fillText("Els arbres són molt importants", 180, 50);
@@ -187,7 +187,7 @@ define(function (require) {
           this.next.render(ctx);
           break;
         case 1:
-          ctx.font = "16px "+constants.font;
+          ctx.font = "18px "+constants.font;
           ctx.textAlign = "center";
           ctx.fillStyle = "black";
           ctx.fillText("A tothom li agrada veure", 180, 50);
@@ -202,19 +202,21 @@ define(function (require) {
           this.next.render(ctx);
           break;
         case 2:
-          ctx.font = "16px "+constants.font;
+          ctx.font = "18px "+constants.font;
           ctx.textAlign = "center";
           ctx.fillStyle = "black";
           ctx.fillText("Recull les deixalles escampades", 180, 50);
           ctx.fillText("pel carrer. Tens 5 segons abans", 180, 90);
           ctx.fillText("no desapareixin!", 180, 130);
-          ctx.fillText("Si reculls un objecte, guanyaràs", 180, 170);
+          ctx.fillText("Si reculls un objecte", 180, 170);
+          ctx.fillText("guanyaràs       punts,", 180, 210);
           ctx.fillStyle = "rgba(60, 175, 60, 1)";
-          ctx.fillText(constants.hit+" punts", 180, 210);
+          ctx.fillText(constants.hit, 200, 210);
           ctx.fillStyle = "black";
-          ctx.fillText("Però si no ho reculls, perdràs", 180, 250);
+          ctx.fillText("Però si el deixes desaparèixer", 180, 250);
+          ctx.fillText("perdràs       punts.", 180, 290);
           ctx.fillStyle = "rgba(175, 60, 60, 1)";
-          ctx.fillText(constants.miss+" punts", 180, 290);
+          ctx.fillText(constants.miss, 190, 290);
           ctx.fillStyle = "black";
           ctx.fillText("Recull totes les deixalles", 180, 330);
           ctx.fillText("i guanyaràs la màxima puntuació!", 180, 370);
