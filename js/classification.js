@@ -12,15 +12,15 @@ define(function (require) {
 
   Classification = function () {
     this.page         = 0;
-    this.next         = new Button(canvas.width-105, canvas.height-55, 100, 50, "rgba(50, 50, 255, 1)", "Següent");
+    this.next         = new Button(canvas.width-105, canvas.height-55, 100, 50, "rgba(60, 175, 60, 1)", "Següent");
     this.background   = new Image;
     this.scoreBg      = new Image;
     this.pause        = false;
-    this.pauseBtn     = new Button(165, 4, 30, 30, "rgba(50, 50, 255, 1)", "||");
-    this.resumeBtn    = new Button(110, 100, 140, 100, "rgba(50, 50, 255, 1)", "Tornar al joc");
+    this.pauseBtn     = new Button(165, 4, 30, 30, "rgba(60, 175, 60, 1)", "||");
+    this.resumeBtn    = new Button(110, 100, 140, 100, "rgba(60, 175, 60, 1)", "Tornar al joc");
     this.timePause    = 0;
     this.exit         = false;
-    this.exitBtn      = new Button(110, 210, 140, 100, "rgba(255, 50, 50, 1)", "Sortir");
+    this.exitBtn      = new Button(110, 210, 140, 100, "rgba(175, 60, 60, 1)", "Sortir");
     this.inGame       = 0;
     this.bubbles      = [];
     this.totalScore   = 0;
@@ -189,7 +189,8 @@ define(function (require) {
   // RENDER game objects
   Classification.prototype.render = function(canvas, ctx) {
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(100, 200, 255, 0.5)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     if (this.inGame === 0) {
       switch (this.page) {

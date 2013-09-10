@@ -149,7 +149,8 @@ define(function (require) {
   // RENDER game objects
   Tapping.prototype.render = function(canvas, ctx) {
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(100, 200, 255, 0.5)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     if (this.inGame === 0) {
       switch (this.page) {

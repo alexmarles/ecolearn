@@ -1,16 +1,18 @@
 define(function (require) {
 
-  var pointer   = require('pointer'),
-      Button    = require('button');
+  var pointer     = require('pointer'),
+      Button      = require('button');
 
   var Menu = function () {
-    this.buttons = [];
+    this.front    = new Image;
+    this.buttons  = [];
   };
 
   // INITIALIZE THE MENU OBJECTS
   Menu.prototype.init = function () {
-    this.buttons.push(new Button(55, 330, 250, 100, "rgba(50, 50, 255, 1)", "Separem els residus!"));
-    this.buttons.push(new Button(55, 450, 250, 100, "rgba(50, 50, 255, 1)", "Netejem el carrer!"));
+    this.front.src = "images/front.png";
+    this.buttons.push(new Button(55, 370, 250, 100, "rgba(60, 175, 60, 1)", "Separem els residus!"));
+    this.buttons.push(new Button(55, 480, 250, 100, "rgba(60, 175, 60, 1)", "Netejem el carrer!"));
   };
 
   // HANDLE COLLISIONS FOR MENU OBJECTS
@@ -35,8 +37,11 @@ define(function (require) {
   // RENDER MENU OBJECTS
   Menu.prototype.render = function (canvas, ctx) {
     ctx.globalAlpha = 1;
-    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+
+    ctx.fillStyle = "rgba(100, 200, 255, 0.5)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.drawImage(this.front, 20, 50, 300, 320);
 
     this.buttons.forEach( function (button) {
         button.render(ctx);
