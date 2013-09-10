@@ -10,7 +10,9 @@ define(function (require) {
 
   Tapping = function () {
     this.page         = 0;
-    this.next         = new Button(canvas.width-105, canvas.height-55, 100, 50, "rgba(50, 50, 255, 1)", "Següent");
+    this.next         = new Button(canvas.width-105, canvas.height-55, 100, 50, "rgba(60, 175, 60, 1)", "Següent");
+    this.tree         = new Image;
+    this.bin          = new Image;
     this.background   = new Image;
     this.pause        = false;
     this.pauseBtn     = new Button(320, 50, 30, 30, "rgba(60, 175, 60, 1)", "||");
@@ -35,6 +37,8 @@ define(function (require) {
   Tapping.prototype.init = function (canvas) {
     var that = this;
 
+    this.tree.src = "images/tree.png";
+    this.bin.src = "images/bin.png";
     this.background.src = "images/tap_bg.png";
 
     loadImages({
@@ -165,6 +169,61 @@ define(function (require) {
       ctx.globalAlpha = 1;
       switch (this.page) {
         case 0:
+          ctx.font = "16px "+constants.font;
+          ctx.textAlign = "center";
+          ctx.fillStyle = "black";
+          ctx.fillText("Els arbres són molt importants", 180, 50);
+          ctx.fillText("per la vida humana: converteixen", 180, 90);
+          ctx.fillText("el CO2 en oxigen i ens ajuden", 180, 130);
+          ctx.fillText("a respirar. Per tant, els hem", 180, 170);
+          ctx.fillText("de mantenir nets i no", 180, 210);
+          ctx.fillText("llençar-hi deixalles.", 180, 250);
+          ctx.fillText("Els arbres són l'element vege-", 180, 290);
+          ctx.fillText("tal més important per tenir", 180, 330);
+          ctx.fillText("un ambient urbà de qualitat.", 180, 370);
+          ctx.drawImage(this.tree, 20, 400, 300, 276);
+
+
+          this.next.render(ctx);
+          break;
+        case 1:
+          ctx.font = "16px "+constants.font;
+          ctx.textAlign = "center";
+          ctx.fillStyle = "black";
+          ctx.fillText("A tothom li agrada veure", 180, 50);
+          ctx.fillText("el carrer ben net i sense", 180, 90);
+          ctx.fillText("deixalles a terra.", 180, 130);
+          ctx.fillText("Si fem servir les papereres", 180, 170);
+          ctx.fillText("que trobem als espais públics", 180, 210);
+          ctx.fillText("ajudarem a mantenir neta", 180, 250);
+          ctx.fillText("la ciutat.", 180, 290);
+          ctx.drawImage(this.bin, 40, 330, 200, 300);
+
+          this.next.render(ctx);
+          break;
+        case 2:
+          ctx.font = "16px "+constants.font;
+          ctx.textAlign = "center";
+          ctx.fillStyle = "black";
+          ctx.fillText("Recull les deixalles escampades", 180, 50);
+          ctx.fillText("pel carrer. Tens 5 segons abans", 180, 90);
+          ctx.fillText("no desapareixin!", 180, 130);
+          ctx.fillText("Si reculls un objecte, guanyaràs", 180, 170);
+          ctx.fillStyle = "rgba(60, 175, 60, 1)";
+          ctx.fillText(constants.hit+" punts", 180, 210);
+          ctx.fillStyle = "black";
+          ctx.fillText("Però si no ho reculls, perdràs", 180, 250);
+          ctx.fillStyle = "rgba(175, 60, 60, 1)";
+          ctx.fillText(constants.miss+" punts", 180, 290);
+          ctx.fillStyle = "black";
+          ctx.fillText("Recull totes les deixalles", 180, 330);
+          ctx.fillText("i guanyaràs la màxima puntuació!", 180, 370);
+          
+          this.next.x = 55;
+          this.next.y = 450;
+          this.next.width = 250;
+          this.next.height = 100;
+          this.next.text = "Jugar!"
           this.next.render(ctx);
           break;
         default:
