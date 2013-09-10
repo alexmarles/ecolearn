@@ -22,6 +22,7 @@ define(function (require) {
       this.buttons.forEach( function (button, index) {
         if (collides(button, pointer)) {
           value = index+1;
+          pointer.active = false;
         }
       });
     }

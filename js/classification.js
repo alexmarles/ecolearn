@@ -20,10 +20,10 @@ define(function (require) {
     this.scoreBg      = new Image;
     this.pause        = false;
     this.pauseBtn     = new Button(320, 50, 30, 30, "rgba(60, 175, 60, 1)", "||");
-    this.resumeBtn    = new Button(55, 140, 250, 100, "rgba(60, 175, 60, 1)", "Tornar al joc");
+    this.resumeBtn    = new Button(55, 215, 250, 100, "rgba(60, 175, 60, 1)", "Tornar al joc");
     this.timePause    = 0;
     this.exit         = false;
-    this.exitBtn      = new Button(55, 250, 250, 100, "rgba(175, 60, 60, 1)", "Sortir");
+    this.exitBtn      = new Button(55, 325, 250, 100, "rgba(175, 60, 60, 1)", "Sortir");
     this.inGame       = 0;
     this.bubbles      = [];
     this.totalScore   = 0;
@@ -115,13 +115,13 @@ define(function (require) {
   // Update game objects
   Classification.prototype.update = function (modifier) {
     var that = this,
-        next = false,
         toRemove = null;
 
     if (!this.pause) {
       if (this.inGame === 0) {
         if (pointer.active && collides(this.next, pointer)) {
           ++this.page;
+          pointer.active = false;
         }
       } else if (this.inGame === 1) {
         if (pointer.active) {
@@ -177,16 +177,21 @@ define(function (require) {
       if (pointer.active && collides(this.pauseBtn, pointer)) {
         this.pause = true;
         this.timePause = timer.time;
+        pointer.active = false;
       }
     } else {
       if (pointer.active && collides(this.resumeBtn, pointer)) {
         this.pause = false;
         timer.time = this.timePause;
         this.timePause = 0;
+        pointer.active = false;
       }
-
+    }
+    
+    if (this.pause || this.inGame > 1) {
       if (pointer.active && collides(this.exitBtn, pointer)) {
         this.exit = true;
+        pointer.active = false;
       }
     }
 
@@ -196,16 +201,16 @@ define(function (require) {
   // RENDER game objects
   Classification.prototype.render = function(canvas, ctx) {
 
-    ctx.fillStyle = "rgba(100, 200, 255, 0.5)";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     if (this.inGame === 0) {
+      ctx.globalAlpha = 0.25;
+      ctx.drawImage(this.scoreBg, 0, 0, canvas.width, canvas.height);
+      ctx.globalAlpha = 1;
+          
       switch (this.page) {
         case 0:
-          ctx.globalAlpha = 0.25;
-          ctx.drawImage(this.scoreBg, 0, 0, canvas.width, canvas.height);
-          ctx.globalAlpha = 1;
-          
           ctx.font = "18px Chalkduster";
           ctx.textAlign = "center";
           ctx.fillStyle = "black";
@@ -220,14 +225,9 @@ define(function (require) {
           ctx.fillText("al contenidor GROC.", 180, 370);
           ctx.drawImage(this.bin0, 50, 428, 111, 152);
 
-          this.next.x = 5;
           this.next.render(ctx);
           break;
         case 1:
-          ctx.globalAlpha = 0.25;
-          ctx.drawImage(this.scoreBg, 0, 0, canvas.width, canvas.height);
-          ctx.globalAlpha = 1;
-          
           ctx.font = "18px Chalkduster";
           ctx.textAlign = "center";
           ctx.fillStyle = "black";
@@ -242,14 +242,9 @@ define(function (require) {
           ctx.fillText("", 180, 370);
           ctx.drawImage(this.bin1, 50, 428, 111, 152);
 
-          this.next.x = 130;
           this.next.render(ctx);
           break;
         case 2:
-          ctx.globalAlpha = 0.25;
-          ctx.drawImage(this.scoreBg, 0, 0, canvas.width, canvas.height);
-          ctx.globalAlpha = 1;
-          
           ctx.font = "18px Chalkduster";
           ctx.textAlign = "center";
           ctx.fillStyle = "black";
@@ -264,14 +259,9 @@ define(function (require) {
           ctx.fillText("sense tapa. ", 180, 370);
           ctx.drawImage(this.bin2, 50, 428, 111, 152);
 
-          this.next.x = canvas.width-105;
           this.next.render(ctx);
           break;
         case 3:
-          ctx.globalAlpha = 0.25;
-          ctx.drawImage(this.scoreBg, 0, 0, canvas.width, canvas.height);
-          ctx.globalAlpha = 1;
-          
           ctx.font = "18px Chalkduster";
           ctx.textAlign = "center";
           ctx.fillStyle = "black";
@@ -349,13 +339,13 @@ define(function (require) {
       ctx.drawImage(this.scoreBg, 0, 0, canvas.width, canvas.height);
       ctx.globalAlpha = 1;
 
-      ctx.font = "20px Chalkduster";
+      ctx.font = "18px Chalkduster";
       ctx.textAlign = "center";
       ctx.fillStyle = "black";
       ctx.fillText("HAS FET UNA PUNTUACIÓ DE...", 180, 150);
-      ctx.fillText("TORNA A JUGAR SI VOLS", 180, 280);
+      ctx.fillText("TORNA A JUGAR SI VOLS", 180, 300);
       ctx.fillText("MILLORAR LA TEVA PUNTUACIÓ", 180, 330);
-      ctx.font = "24px Chalkduster";
+      ctx.font = "30px Chalkduster";
       ctx.fillStyle = "blue";
       ctx.fillText(this.totalScore + " PUNTS!", 180, 220);
 
