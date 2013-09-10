@@ -9,8 +9,9 @@ define(function (require) {
     this.containerHeight = 150;
     this.itemWidth = 80;
     this.bubbleRadius = 15;
-    this.hit = 100;
-    this.miss = 50;
+    this.hit = 50;
+    this.miss = 100;
+    this.font = "chalkdustregular";
   };
 
   return new Constants();

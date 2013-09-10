@@ -1,4 +1,5 @@
 define(function (require) {
+  var constants = require("constants");
 
   var Button = function (x, y, width, height, color, text) {
     this.x = x;
@@ -23,7 +24,7 @@ define(function (require) {
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
 
-    ctx.font = "20px Chalkduster";
+    ctx.font = "20px "+constants.font;
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
     ctx.fillStyle = "rgba(255, 255, 255, 1)";

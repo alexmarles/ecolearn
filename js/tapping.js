@@ -201,7 +201,7 @@ define(function (require) {
       ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
       ctx.fillRect(0, 0, canvas.width, 40);
 
-      ctx.font = "24px Chalkduster";
+      ctx.font = "24px "+constants.font;
       ctx.textAlign = "left";
       ctx.textBaseline = "top";
       ctx.fillStyle = "black";
@@ -228,13 +228,13 @@ define(function (require) {
       ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
       ctx.globalAlpha = 1;
 
-      ctx.font = "18px Chalkduster";
+      ctx.font = "18px "+constants.font;
       ctx.textAlign = "center";
       ctx.fillStyle = "black";
       ctx.fillText("HAS FET UNA PUNTUACIÓ DE...", 180, 150);
       ctx.fillText("TORNA A JUGAR SI VOLS", 180, 300);
       ctx.fillText("MILLORAR LA TEVA PUNTUACIÓ", 180, 330);
-      ctx.font = "30px Chalkduster";
+      ctx.font = "30px "+constants.font;
       ctx.fillStyle = "blue";
       ctx.fillText(this.totalScore + " PUNTS!", 180, 220);
 
