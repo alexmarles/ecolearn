@@ -37,7 +37,7 @@ define(function (require) {
     ctx.strokeStyle = "black";
     ctx.stroke();
 
-    ctx.font = "12px Helvetica";
+    ctx.font = "12px Chalkduster";
     ctx.textAlign = "center";
     ctx.fillStyle = "white";
     ctx.fillText(this.score, centerX, centerY-6);

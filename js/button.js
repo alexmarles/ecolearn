@@ -23,7 +23,7 @@ define(function (require) {
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
 
-    ctx.font = "24px Helvetica";
+    ctx.font = "20px Chalkduster";
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
     ctx.fillStyle = "rgba(255, 255, 255, 1)";

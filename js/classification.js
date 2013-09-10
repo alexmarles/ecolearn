@@ -13,14 +13,17 @@ define(function (require) {
   Classification = function () {
     this.page         = 0;
     this.next         = new Button(canvas.width-105, canvas.height-55, 100, 50, "rgba(60, 175, 60, 1)", "Següent");
+    this.bin0         = new Image;
+    this.bin1         = new Image;
+    this.bin2         = new Image;
     this.background   = new Image;
     this.scoreBg      = new Image;
     this.pause        = false;
-    this.pauseBtn     = new Button(165, 4, 30, 30, "rgba(60, 175, 60, 1)", "||");
-    this.resumeBtn    = new Button(110, 100, 140, 100, "rgba(60, 175, 60, 1)", "Tornar al joc");
+    this.pauseBtn     = new Button(320, 50, 30, 30, "rgba(60, 175, 60, 1)", "||");
+    this.resumeBtn    = new Button(55, 140, 250, 100, "rgba(60, 175, 60, 1)", "Tornar al joc");
     this.timePause    = 0;
     this.exit         = false;
-    this.exitBtn      = new Button(110, 210, 140, 100, "rgba(175, 60, 60, 1)", "Sortir");
+    this.exitBtn      = new Button(55, 250, 250, 100, "rgba(175, 60, 60, 1)", "Sortir");
     this.inGame       = 0;
     this.bubbles      = [];
     this.totalScore   = 0;
@@ -44,6 +47,10 @@ define(function (require) {
   Classification.prototype.init = function (canvas) {
 
     var that = this;
+
+    this.bin0.src = "images/bin0.png";
+    this.bin1.src = "images/bin1.png";
+    this.bin2.src = "images/bin2.png";
 
     this.background.src = "images/clas_bg.png";
     this.scoreBg.src = "images/clas_bg_score.png";
@@ -198,11 +205,97 @@ define(function (require) {
           ctx.globalAlpha = 0.25;
           ctx.drawImage(this.scoreBg, 0, 0, canvas.width, canvas.height);
           ctx.globalAlpha = 1;
+          
+          ctx.font = "18px Chalkduster";
+          ctx.textAlign = "center";
+          ctx.fillStyle = "black";
+          ctx.fillText("Els principals residus d'envasos", 180, 50);
+          ctx.fillText("són ampolles i pots de plàstic,", 180, 90);
+          ctx.fillText("llaunes de conserves i refrescos,", 180, 130);
+          ctx.fillText("cartró per begudes (tetrabrics),", 180, 170);
+          ctx.fillText("tapes metàl·liques i safates", 180, 210);
+          ctx.fillText("de porexpan.", 180, 250);
+          ctx.fillText("Aquest tipus de residus", 180, 290);
+          ctx.fillText("és el que hem de llençar", 180, 330);
+          ctx.fillText("al contenidor GROC.", 180, 370);
+          ctx.drawImage(this.bin0, 50, 428, 111, 152);
 
+          this.next.x = 5;
+          this.next.render(ctx);
+          break;
+        case 1:
+          ctx.globalAlpha = 0.25;
+          ctx.drawImage(this.scoreBg, 0, 0, canvas.width, canvas.height);
+          ctx.globalAlpha = 1;
+          
+          ctx.font = "18px Chalkduster";
+          ctx.textAlign = "center";
+          ctx.fillStyle = "black";
+          ctx.fillText("El paper i cartró que es pot", 180, 50);
+          ctx.fillText("llençar al contenidor BLAU", 180, 90);
+          ctx.fillText("són principalment diaris, revistes,", 180, 130);
+          ctx.fillText("llibretes, sobres, capses de", 180, 170);
+          ctx.fillText("cartró, envasos de paper, papers", 180, 210);
+          ctx.fillText("d'embolicar regals, entre d'altres.", 180, 250);
+          ctx.fillText("", 180, 290);
+          ctx.fillText("", 180, 330);
+          ctx.fillText("", 180, 370);
+          ctx.drawImage(this.bin1, 50, 428, 111, 152);
+
+          this.next.x = 130;
+          this.next.render(ctx);
+          break;
+        case 2:
+          ctx.globalAlpha = 0.25;
+          ctx.drawImage(this.scoreBg, 0, 0, canvas.width, canvas.height);
+          ctx.globalAlpha = 1;
+          
+          ctx.font = "18px Chalkduster";
+          ctx.textAlign = "center";
+          ctx.fillStyle = "black";
+          ctx.fillText("La recollida selectiva", 180, 50);
+          ctx.fillText("admet només el vidre procedent", 180, 90);
+          ctx.fillText("d’envasos per reciclar-lo", 180, 130);
+          ctx.fillText("i convertir-lo en envasos", 180, 170);
+          ctx.fillText("similars.", 180, 210);
+          ctx.fillText("Al contenidor VERD només", 180, 250);
+          ctx.fillText("s'hi han de llençar ampolles", 180, 290);
+          ctx.fillText("de vidre i pots de vidre", 180, 330);
+          ctx.fillText("sense tapa. ", 180, 370);
+          ctx.drawImage(this.bin2, 50, 428, 111, 152);
+
+          this.next.x = canvas.width-105;
+          this.next.render(ctx);
+          break;
+        case 3:
+          ctx.globalAlpha = 0.25;
+          ctx.drawImage(this.scoreBg, 0, 0, canvas.width, canvas.height);
+          ctx.globalAlpha = 1;
+          
+          ctx.font = "18px Chalkduster";
+          ctx.textAlign = "center";
+          ctx.fillStyle = "black";
+          ctx.fillText("Arrossega els residus que cauen", 180, 50);
+          ctx.fillText("al contenidor que els pertoca.", 180, 90);
+          ctx.fillText("Si ho fas correctament,", 180, 130);
+          ctx.fillText("guanyaràs "+constants.hit+" punts,", 180, 170);
+          ctx.fillText("però si no ho fas bé", 180, 210);
+          ctx.fillText("perdràs "+constants.miss+" punts.", 180, 250);
+          ctx.fillText("Classifica tots els residus", 180, 290);
+          ctx.fillText("sense equivocar-te i", 180, 330);
+          ctx.fillText("guanyaràs la màxima puntuació!", 180, 370);
+
+          this.next.x = 55;
+          this.next.y = 450;
+          this.next.width = 250;
+          this.next.height = 100;
+          this.next.text = "Jugar!"
           this.next.render(ctx);
           break;
         default:
           ++this.inGame;
+          timer.time = 0;
+          timer.lastBorn = 0;
           break;
       }
     } else if (this.inGame === 1) {
@@ -229,7 +322,7 @@ define(function (require) {
       ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
       ctx.fillRect(0, 0, canvas.width, 40);
 
-      ctx.font = "24px Helvetica";
+      ctx.font = "24px Chalkduster";
       ctx.textAlign = "left";
       ctx.textBaseline = "top";
       ctx.fillStyle = "black";
@@ -256,13 +349,13 @@ define(function (require) {
       ctx.drawImage(this.scoreBg, 0, 0, canvas.width, canvas.height);
       ctx.globalAlpha = 1;
 
-      ctx.font = "20px Helvetica";
+      ctx.font = "20px Chalkduster";
       ctx.textAlign = "center";
       ctx.fillStyle = "black";
       ctx.fillText("HAS FET UNA PUNTUACIÓ DE...", 180, 150);
       ctx.fillText("TORNA A JUGAR SI VOLS", 180, 280);
       ctx.fillText("MILLORAR LA TEVA PUNTUACIÓ", 180, 330);
-      ctx.font = "24px Helvetica";
+      ctx.font = "24px Chalkduster";
       ctx.fillStyle = "blue";
       ctx.fillText(this.totalScore + " PUNTS!", 180, 220);
 

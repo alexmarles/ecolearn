@@ -53,8 +53,6 @@ define(function (require) {
         default:
           break;
       }
-      timer.time = 0;
-      timer.lastBorn = 0;
     } else if (inClassification) {
       option = 0;
 

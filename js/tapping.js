@@ -12,11 +12,12 @@ define(function (require) {
     this.page         = 0;
     this.next         = new Button(canvas.width-105, canvas.height-55, 100, 50, "rgba(50, 50, 255, 1)", "Següent");
     this.background   = new Image;
-    this.pauseBtn     = new Button(165, 4, 30, 30, "rgba(50, 50, 255, 1)", "||");
-    this.resumeBtn    = new Button(110, 100, 140, 100, "rgba(50, 50, 255, 1)", "Tornar al joc");
+    this.pause        = false;
+    this.pauseBtn     = new Button(320, 50, 30, 30, "rgba(60, 175, 60, 1)", "||");
+    this.resumeBtn    = new Button(55, 140, 250, 100, "rgba(60, 175, 60, 1)", "Tornar al joc");
     this.timePause    = 0;
     this.exit         = false;
-    this.exitBtn      = new Button(110, 210, 140, 100, "rgba(255, 50, 50, 1)", "Sortir");
+    this.exitBtn      = new Button(55, 250, 250, 100, "rgba(175, 60, 60, 1)", "Sortir");
     this.inGame       = 0;
     this.bubbles      = [];
     this.totalScore   = 0;
@@ -193,7 +194,7 @@ define(function (require) {
       ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
       ctx.fillRect(0, 0, canvas.width, 40);
 
-      ctx.font = "24px Helvetica";
+      ctx.font = "24px Chalkduster";
       ctx.textAlign = "left";
       ctx.textBaseline = "top";
       ctx.fillStyle = "black";
@@ -220,14 +221,14 @@ define(function (require) {
       ctx.drawImage(this.background, 0, 0, canvas.width, canvas.height);
       ctx.globalAlpha = 1;
 
-      ctx.font = "20px Helvetica";
+      ctx.font = "20px Chalkduster";
       ctx.textAlign = "center";
       ctx.fillStyle = "black";
       ctx.fillText("HAS FET UNA PUNTUACIÓ DE...", 180, 150);
       ctx.fillText("FELICITATS!", 180, 280);
       ctx.fillText("TORNA A JUGAR SI VOLS", 180, 330);
       ctx.fillText("MILLORAR LA TEVA PUNTUACIÓ", 180, 350);
-      ctx.font = "24px Helvetica";
+      ctx.font = "24px Chalkduster";
       ctx.fillStyle = "blue";
       ctx.fillText(this.totalScore + " PUNTS!", 180, 220);
 
