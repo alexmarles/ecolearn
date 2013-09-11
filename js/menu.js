@@ -39,10 +39,20 @@ define(function (require) {
   Menu.prototype.render = function (canvas, ctx) {
     ctx.globalAlpha = 1;
 
-    ctx.fillStyle = "rgba(100, 200, 255, 0.5)";
+    ctx.fillStyle = "rgba(170, 225, 255, 0.5)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.drawImage(this.front, 20, 50, 300, 320);
+    ctx.drawImage(this.front, 55, 40, 250, 250);
+
+    ctx.shadowColor = "black";
+    ctx.shadowBlur = 1;
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 2;
+
+    ctx.textAlign = "center";
+    ctx.fillStyle = "rgba(255, 120, 0, 1)";
+    ctx.fillText("Escull un joc per començar", 180, 300);
+    ctx.fillText("a cuidar el medi ambient:", 180, 325);
 
     this.buttons.forEach( function (button) {
         button.render(ctx);
