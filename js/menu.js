@@ -12,7 +12,7 @@ define(function (require) {
   Menu.prototype.init = function () {
     this.front.src = "images/front.png";
     this.buttons.push(new Button(55, 370, 250, 100, "rgba(60, 175, 60, 1)", "Separem els residus!"));
-    this.buttons.push(new Button(55, 480, 250, 100, "rgba(60, 175, 60, 1)", "Netejem el carrer!"));
+    this.buttons.push(new Button(55, 480, 250, 100, "rgba(60, 175, 60, 1)", "Netegem el carrer!"));
   };
 
   // HANDLE COLLISIONS FOR MENU OBJECTS
